@@ -1,17 +1,15 @@
-import CommunityAction from "@/components/CommunityAction";
-import { HeroBanner } from "@/components/site/hero-banner";
-import { SiteHeader } from "@/components/site/site-header";
-import WorksKindora from "@/components/WorksKindora";
+import CommunityAction from "@/components/Home/CommunityAction";
+import { HeroBanner } from "@/components/Home/hero-banner";
 
+import WorksKindora from "@/components/Home/WorksKindora";
 
 export default function Home() {
   return (
     <div className="bg-[#f2f0e6] font-[family-name:var(--font-geist-sans)]">
-      <SiteHeader />
       <main>
         <HeroBanner />
         <WorksKindora />
-           <CommunityAction></CommunityAction> 
+        <CommunityAction></CommunityAction>
       </main>
     </div>
   );

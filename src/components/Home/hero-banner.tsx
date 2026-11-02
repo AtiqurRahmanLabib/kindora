@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, Heart, Plus, Sparkles } from "lucide-react";
 import bannerImg from '../../../public/assests/bannerImage.png'
+import Link from "next/link";
 
 const avatars = [
   { src: "/avatar-1.jpg", alt: "Neighbor portrait" },
@@ -40,13 +41,13 @@ export function HeroBanner() {
               Explore events
               <ArrowRight className="size-4" />
             </a>
-            <a
-              href="#create-event"
+            <Link
+              href="/create-event"
               className="flex h-12 items-center gap-2.5 rounded-xl border border-[#dcdacd] bg-white px-6 text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#faf9f3]"
             >
               <Plus className="size-4" />
               Create event
-            </a>
+            </Link>
           </div>
 
           <div className="mt-10 flex items-center gap-3">
