@@ -43,7 +43,7 @@ const WorksKindora = () => {
     <div>
       {/* Stats strip */}
       <section className="bg-[#1f3d33]">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-2 gap-y-8 px-6 py-10 sm:px-10 lg:grid-cols-4 lg:px-16">
+        <div className="mx-auto mt-16 grid max-w-360 grid-cols-2 gap-y-8 px-6 py-10 sm:px-10 lg:grid-cols-4 lg:px-16">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
@@ -62,7 +62,7 @@ const WorksKindora = () => {
 
       {/* How Kindora works */}
       <section className="bg-[#f2f0e6]">
-        <div className="mx-auto max-w-[1440px] px-6 py-20 sm:px-10 lg:px-16">
+        <div className="mx-auto max-w-360 px-6 py-20 sm:px-10 lg:px-16">
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
             How Kindora works
           </p>

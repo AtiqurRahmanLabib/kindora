@@ -10,7 +10,7 @@ const navLinks = [
 export function SiteHeader() {
   return (
     <header className="border-b border-[#e3e1d4] bg-[#f2f0e6]">
-      <div className="mx-auto flex h-[78px] max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-16">
+      <div className="mx-auto flex h-19.5 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-16">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[#1f3d33] text-[#a8c8b7]">
@@ -40,7 +40,7 @@ export function SiteHeader() {
             aria-label="Toggle dark mode"
             className="flex size-10 items-center justify-center rounded-full bg-white text-[#1f3d33] shadow-sm transition hover:shadow-md"
           >
-            <Moon className="size-[18px]" />
+            <Moon className="size-4.5" />
           </button>
 
           <a

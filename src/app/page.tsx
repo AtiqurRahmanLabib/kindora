@@ -1,6 +1,8 @@
+import CommunityAction from "@/components/CommunityAction";
 import { HeroBanner } from "@/components/site/hero-banner";
 import { SiteHeader } from "@/components/site/site-header";
 import WorksKindora from "@/components/WorksKindora";
+
 
 export default function Home() {
   return (
@@ -9,6 +11,7 @@ export default function Home() {
       <main>
         <HeroBanner />
         <WorksKindora />
+           <CommunityAction></CommunityAction> 
       </main>
     </div>
   );

@@ -11,7 +11,7 @@ const avatars = [
 export function HeroBanner() {
   return (
     <section className="relative overflow-hidden bg-[#f2f0e6]">
-      <div className="mx-auto grid max-w-[1440px] items-center gap-14 px-6 pt-16 pb-24 sm:px-10 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-16 xl:pt-20">
+      <div className="mx-auto grid max-w-360 items-center gap-14 px-6 pt-16 pb-24 sm:px-10 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-16 xl:pt-20">
         {/* Left: copy */}
         <div>
           <p className="flex items-center gap-2 text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
@@ -58,7 +58,7 @@ export function HeroBanner() {
                   alt={avatar.alt}
                   width={38}
                   height={38}
-                  className={`size-[38px] rounded-full object-cover ring-2 ring-[#f2f0e6] ${
+                  className={`size-9.5 rounded-full object-cover ring-2 ring-[#f2f0e6] ${
                     index > 0 ? "-ml-3" : ""
                   }`}
                 />
@@ -74,7 +74,7 @@ export function HeroBanner() {
         {/* Right: visual */}
         <div className="relative">
           {/* Decorative outline circle */}
-          <div className="pointer-events-none absolute -right-16 -bottom-24 size-[420px] rounded-full border-2 border-[#9dbfae]" />
+          <div className="pointer-events-none absolute -right-16 -bottom-24 size-105 rounded-full border-2 border-[#9dbfae]" />
           <div className="relative">
             <Image
               src={bannerImg}
@@ -82,7 +82,7 @@ export function HeroBanner() {
               width={820}
               height={920}
               preload
-              className="h-[480px] w-full rounded-[64px] object-cover sm:h-[560px] lg:h-[640px]"
+              className="h-120 w-full rounded-[64px] object-cover sm:h-140 lg:h-160"
             />
 
             {/* Floating stat card: impact */}
