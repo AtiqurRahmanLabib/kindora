@@ -1,7 +1,15 @@
-import Image from "next/image";
+import { HeroBanner } from "@/components/site/hero-banner";
+import { SiteHeader } from "@/components/site/site-header";
+import WorksKindora from "@/components/WorksKindora";
 
 export default function Home() {
   return (
-    <h1>Hello World</h1>
+    <div className="bg-[#f2f0e6] font-[family-name:var(--font-geist-sans)]">
+      <SiteHeader />
+      <main>
+        <HeroBanner />
+        <WorksKindora />
+      </main>
+    </div>
   );
 }

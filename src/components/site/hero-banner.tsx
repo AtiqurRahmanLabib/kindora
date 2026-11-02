@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight, Heart, Plus, Sparkles } from "lucide-react";
+import bannerImg from '../../../public/assests/bannerImage.png'
 
 const avatars = [
   { src: "/avatar-1.jpg", alt: "Neighbor portrait" },
@@ -76,7 +77,7 @@ export function HeroBanner() {
           <div className="pointer-events-none absolute -right-16 -bottom-24 size-[420px] rounded-full border-2 border-[#9dbfae]" />
           <div className="relative">
             <Image
-              src="/hero-garden.jpg"
+              src={bannerImg}
               alt="Volunteers planting seedlings together outdoors"
               width={820}
               height={920}
