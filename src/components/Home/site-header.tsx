@@ -55,7 +55,7 @@ export function SiteHeader() {
 
           {/* Desktop Login */}
           <Link
-            href="#login"
+            href="/login"
             className="hidden px-2 text-[15px] font-semibold text-[#1f3d33] transition-opacity hover:opacity-70 sm:block"
           >
             Log in
