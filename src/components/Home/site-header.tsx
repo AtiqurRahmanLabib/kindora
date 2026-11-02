@@ -6,7 +6,7 @@ import { ChevronDown, Leaf, Moon, Menu, X } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Upcoming Events", href: "#upcoming-events" },
+  { label: "Upcoming Events", href: "/upcoming-events" },
   { label: "Our Impact", href: "/" },
   { label: "Create Event", href: "/create-event" },
 ];

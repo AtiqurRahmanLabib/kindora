@@ -8,6 +8,7 @@ import {
   Leaf,
   Moon,
 } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Sign up — Kindora",
@@ -19,7 +20,7 @@ const SignupPage = () => {
   return (
     <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2 font-[family-name:var(--font-geist-sans)]">
       {/* Left: image panel */}
-      <div className="relative min-h-[420px] overflow-hidden rounded-2xl">
+      <div className="relative min-h-105 overflow-hidden rounded-2xl">
         <Image
           src="/signup-pack.jpg"
           alt="Volunteers packing boxes with donated food and supplies"
@@ -28,19 +29,19 @@ const SignupPage = () => {
           sizes="(max-width: 1024px) 100vw, 50vw"
         />
         {/* Dark gradient for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/5 to-black/70" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/15 via-black/5 to-black/70" />
 
         <div className="absolute inset-0 flex flex-col p-8 sm:p-10">
-          <a href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[#4b8b5f] text-white">
               <Leaf className="size-5" />
             </span>
             <span className="text-[22px] font-semibold tracking-tight text-white">
               Kindora
             </span>
-          </a>
+          </Link>
 
-          <blockquote className="mt-auto mb-8 max-w-lg text-[34px] leading-[1.25] font-bold text-white sm:text-[40px]">
+          <blockquote className="mt-auto mb-8 max-w-lg text-[34px] leading-tight font-bold text-white sm:text-[40px]">
             “The best way to find yourself is to lose yourself in the service
             of others.”
           </blockquote>
@@ -53,19 +54,19 @@ const SignupPage = () => {
       {/* Right: form column */}
       <div className="flex flex-col px-6 pb-10 sm:px-10 lg:px-16">
         <div className="flex items-center justify-between pt-2">
-          <a
+          <Link
             href="/"
             className="flex items-center gap-2 text-sm font-medium text-[#1f3d33] transition-opacity hover:opacity-70"
           >
             <ArrowLeft className="size-4" />
             Back home
-          </a>
+          </Link>
           <button
             type="button"
             aria-label="Toggle dark mode"
             className="flex size-10 items-center justify-center rounded-full bg-[#f2f0e6] text-[#1f3d33] transition hover:shadow-md"
           >
-            <Moon className="size-[18px]" />
+            <Moon className="size-4.5" />
           </button>
         </div>
 
@@ -156,26 +157,26 @@ const SignupPage = () => {
               type="button"
               className="flex h-11 items-center justify-center gap-2.5 rounded-lg border border-[#dcdacd] bg-white text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#faf9f3]"
             >
-              <Globe className="size-[18px] text-[#1f3d33]" />
+              <Globe className="size-4.5 text-[#1f3d33]" />
               Google
             </button>
             <button
               type="button"
               className="flex h-11 items-center justify-center gap-2.5 rounded-lg border border-[#dcdacd] bg-white text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#faf9f3]"
             >
-              <Code className="size-[18px] text-[#1f3d33]" />
+              <Code className="size-4.5 text-[#1f3d33]" />
               GitHub
             </button>
           </div>
 
           <p className="mt-8 text-center text-sm text-[#707c73]">
             Already have an account?{" "}
-            <a
+            <Link
               href="/login"
               className="font-bold text-[#1f5a48] transition-opacity hover:opacity-70"
             >
               Log in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
