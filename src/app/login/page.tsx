@@ -1,10 +1,12 @@
 'use client'
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, Code, Globe, Leaf, Moon } from "lucide-react";
+import { ArrowLeft, ArrowRight, Code, Globe, Leaf, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useTheme } from "next-themes";
 
 const LoginPage = () => {
+  const { theme, setTheme } = useTheme();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -70,9 +72,11 @@ const LoginPage = () => {
           <button
             type="button"
             aria-label="Toggle dark mode"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="flex size-10 items-center justify-center rounded-full bg-[#f2f0e6] text-[#1f3d33] transition hover:shadow-md"
           >
-            <Moon className="size-4.5" />
+            <Moon className="size-4.5 dark:hidden" />
+            <Sun className="hidden size-4.5 dark:block" />
           </button>
         </div>
 

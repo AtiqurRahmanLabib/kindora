@@ -1,7 +1,9 @@
+"use client";
 import Image from "next/image";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import type { Opportunity } from "../../type";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 function formatDateBadge(value: string) {
   const date = new Date(value);
@@ -11,6 +13,7 @@ function formatDateBadge(value: string) {
 }
 
 export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
+  const { theme } = useTheme();
   return (
     <article className="flex flex-col rounded-xl border border-[#e3e1d4] bg-white p-1.5 shadow-[0_2px_12px_rgba(31,61,51,0.05)]">
       {/* Image header */}

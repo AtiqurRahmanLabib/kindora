@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import { SiteHeader } from "@/components/Home/site-header";
 
+// import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader></SiteHeader>
         {children}
         <Footer></Footer>
-        </body>
+      </body>
     </html>
   );
 }
