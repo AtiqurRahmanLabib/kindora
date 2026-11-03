@@ -1,24 +1,34 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Code,
-  Globe,
-  Leaf,
-  Moon,
-} from "lucide-react";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sign up — Kindora",
-  description:
-    "Create your account and find meaningful ways to help close to home.",
-};
+import Image from "next/image";
+import { ArrowLeft, ArrowRight, Code, Globe, Leaf, Moon } from "lucide-react";
+import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 const SignupPage = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const userData = Object.fromEntries(formData.entries()) as {
+      name: string;
+      email: string;
+      password: string;
+      image?: string;
+    };
+    console.log("User data:", userData);
+    const { data, error } = await authClient.signUp.email({
+      ...userData,
+    });
+    if (data) {
+      console.log("Sign-up successful:", data);
+    }
+    if (error) {
+      console.error("Sign-up error:", error);
+    }
+  };
+
   return (
-    <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2">
       {/* Left: image panel */}
       <div className="relative min-h-105 overflow-hidden rounded-2xl">
         <Image
@@ -42,8 +52,8 @@ const SignupPage = () => {
           </Link>
 
           <blockquote className="mt-auto mb-8 max-w-lg text-[34px] leading-tight font-bold text-white sm:text-[40px]">
-            “The best way to find yourself is to lose yourself in the service
-            of others.”
+            “The best way to find yourself is to lose yourself in the service of
+            others.”
           </blockquote>
           <p className="max-w-md text-[15px] leading-relaxed text-white/85">
             Join a community where every hour, idea and helping hand counts.
@@ -81,14 +91,14 @@ const SignupPage = () => {
             Create your account and find meaningful ways to help close to home.
           </p>
 
-          <form className="mt-9 grid gap-5" action="#">
+          <form className="mt-9 grid gap-5" onSubmit={handleSubmit}>
             <label className="grid gap-2">
               <span className="text-[13px] font-bold text-[#1f3d33]">
                 Full name <span className="font-bold">*</span>
               </span>
               <input
                 type="text"
-                name="fullName"
+                name="name"
                 required
                 autoComplete="name"
                 placeholder="Maya Anderson"
@@ -116,7 +126,7 @@ const SignupPage = () => {
               </span>
               <input
                 type="url"
-                name="photoUrl"
+                name="image"
                 placeholder="https://example.com/photo.jpg"
                 className="h-12 w-full rounded-lg border border-[#dcdacd] bg-white px-3.5 text-[15px] text-[#1f3d33] outline-none transition placeholder:text-[#8a958c] focus:border-[#3e7c5b]"
               />

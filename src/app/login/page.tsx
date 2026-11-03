@@ -1,24 +1,30 @@
-import type { Metadata } from "next";
+'use client'
 import Image from "next/image";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Code,
-  Globe,
-  Leaf,
-  Moon,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Code, Globe, Leaf, Moon } from "lucide-react";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Log in — Kindora",
-  description:
-    "Log in to manage your events and keep your good work going.",
-};
+import { authClient } from "@/lib/auth-client";
 
 const LoginPage = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const userData = Object.fromEntries(formData.entries()) as {
+      email: string;
+      password: string;
+    };
+    console.log("User data:", userData);
+    const { data, error } = await authClient.signIn.email({
+      ...userData,
+    });
+    if (data) {
+      console.log("Sign-in successful:", data);
+    }
+    if (error) {
+      console.error("Sign-in error:", error);
+    }
+  };
   return (
-    <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2">
       {/* Left: image panel */}
       <div className="relative min-h-105 overflow-hidden rounded-2xl">
         <Image
@@ -42,8 +48,8 @@ const LoginPage = () => {
           </Link>
 
           <blockquote className="mt-auto mb-8 max-w-lg text-[34px] leading-tight font-bold text-white sm:text-[40px]">
-            “The best way to find yourself is to lose yourself in the service
-            of others.”
+            “The best way to find yourself is to lose yourself in the service of
+            others.”
           </blockquote>
           <p className="max-w-md text-[15px] leading-relaxed text-white/85">
             Join a community where every hour, idea and helping hand counts.
@@ -81,7 +87,7 @@ const LoginPage = () => {
             Log in to manage your events and keep your good work going.
           </p>
 
-          <form className="mt-9 grid gap-5" action="#">
+          <form className="mt-9 grid gap-5" onSubmit={handleSubmit}>
             <label className="grid gap-2">
               <span className="text-[13px] font-bold text-[#1f3d33]">
                 Email address <span className="font-bold">*</span>
@@ -111,7 +117,11 @@ const LoginPage = () => {
 
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-[#5d6d64]">
-                <input type="checkbox" name="remember" className="size-4 accent-[#1f3d33]" />
+                <input
+                  type="checkbox"
+                  name="remember"
+                  className="size-4 accent-[#1f3d33]"
+                />
                 Remember me
               </label>
               <a
