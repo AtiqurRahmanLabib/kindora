@@ -25,7 +25,7 @@ function OpportunitiesFallback() {
       {filterChips.map((chip) => (
         <span
           key={chip}
-          className="h-[452px] animate-pulse rounded-xl border border-[#e3e1d4] bg-white/70"
+          className="h-113 animate-pulse rounded-xl border border-[#e3e1d4] bg-white/70"
         />
       ))}
     </div>
@@ -48,8 +48,8 @@ async function OpportunitiesSection() {
     <>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <label className="relative block max-w-full sm:w-[330px]">
-          <Search className="absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#8a958c]" />
+        <label className="relative block max-w-full sm:w-82.5">
+          <Search className="absolute top-1/2 left-4 size-4.5 -translate-y-1/2 text-[#8a958c]" />
           <input
             type="search"
             name="q"
@@ -88,7 +88,7 @@ async function OpportunitiesSection() {
       <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {sorted.map((opportunity) => (
           <OpportunityCard
-            key={opportunity.title}
+            key={opportunity._id}
             opportunity={opportunity}
           />
         ))}
@@ -99,10 +99,10 @@ async function OpportunitiesSection() {
 
 const UpcomingEventsPage = () => {
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
+    <div className="font-family-name:var(--font-geist-sans)">
       {/* Page hero */}
       <section className="border-b border-[#e3e1d4] bg-[#edefe8]">
-        <div className="mx-auto max-w-[1360px] px-6 py-20 text-center sm:px-10">
+        <div className="mx-auto max-w-340 px-6 py-20 text-center sm:px-10">
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
             Find your next good deed
           </p>
@@ -118,7 +118,7 @@ const UpcomingEventsPage = () => {
 
       {/* Event listing */}
       <main className="bg-[#f2f0e6]">
-        <div className="mx-auto max-w-[1360px] px-6 py-16 sm:px-10">
+        <div className="mx-auto max-w-340 px-6 py-16 sm:px-10">
           <Suspense fallback={<OpportunitiesFallback />}>
             <OpportunitiesSection />
           </Suspense>

@@ -1,11 +1,7 @@
-import type { Metadata } from "next";
-import { ArrowRight, Sparkles } from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Create a community event — Kindora",
-  description:
-    "Share your idea, set the details, and invite neighbors to make it happen with you.",
-};
+import { ArrowRight, Sparkles } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const categoryOptions = [
   "Community support",
@@ -17,11 +13,34 @@ const categoryOptions = [
 ];
 
 const CreateEventPage = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    console.log("Form submitted:", data);
+    const res = fetch(`http://localhost:5000/opportunities`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    res.then((response) => {
+      if (response.ok) {
+        console.log("Event created successfully");
+        redirect('/upcoming-events'); 
+        // Optionally, redirect or show a success message
+      } else {
+        console.error("Failed to create event");
+        // Optionally, handle the error
+      }
+    });
+  };
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
+    <div className="font-family-name:var(--font-geist-sans)">
       {/* Page hero */}
       <section className="border-b border-[#e3e1d4] bg-[#edefe8]">
-        <div className="mx-auto max-w-[1440px] px-6 py-20 text-center sm:px-10">
+        <div className="mx-auto max-w-360 px-6 py-20 text-center sm:px-10">
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
             Organizer studio
           </p>
@@ -37,7 +56,7 @@ const CreateEventPage = () => {
 
       {/* Form */}
       <main className="bg-[#f2f0e6]">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 sm:px-10 lg:grid lg:grid-cols-[300px_1fr] lg:gap-14">
+        <div className="mx-auto max-w-300 px-6 py-16 sm:px-10 lg:grid lg:grid-cols-[300px_1fr] lg:gap-14">
           {/* Sidebar */}
           <aside className="max-lg:mb-10">
             <span className="inline-flex rounded-full bg-[#dfe8d8] px-3 py-1 text-xs font-semibold text-[#2e5b43]">
@@ -53,8 +72,7 @@ const CreateEventPage = () => {
 
             <div className="mt-7 border-t border-[#dcdacd] pt-7">
               <p className="flex items-center gap-2 text-[15px] font-semibold text-[#2e7d6f]">
-                <Sparkles className="size-4" />
-                A tip for great events
+                <Sparkles className="size-4" />A tip for great events
               </p>
               <p className="mt-2 pl-6 text-[13px] leading-relaxed text-[#707c73]">
                 Be specific about the activity, accessibility, and what
@@ -66,7 +84,7 @@ const CreateEventPage = () => {
           {/* Form card */}
           <form
             className="rounded-2xl border border-[#e3e1d4] bg-white p-8 shadow-[0_2px_16px_rgba(31,61,51,0.05)] sm:p-10"
-            action="#"
+            onSubmit={handleSubmit}
           >
             {/* Section 01 — Event basics */}
             <div className="flex items-start gap-4">
@@ -176,15 +194,15 @@ const CreateEventPage = () => {
 
             <div className="mt-6 grid gap-2">
               <label
-                htmlFor="thumbnail-url"
+                htmlFor="image-url"
                 className="text-[13px] font-semibold text-[#1f3d33]"
               >
-                Thumbnail URL
+                Image URL
               </label>
               <input
-                id="thumbnail-url"
+                id="image-url"
                 type="url"
-                name="thumbnailUrl"
+                name="image"
                 placeholder="https://images.example.com/event.jpg"
                 className="h-11 w-full rounded-lg border border-[#dcdacd] bg-white px-3.5 text-[15px] text-[#1f3d33] outline-none transition placeholder:text-[#8a958c] focus:border-[#3e7c5b]"
               />

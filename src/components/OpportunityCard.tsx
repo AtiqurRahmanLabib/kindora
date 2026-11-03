@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import type { Opportunity } from "../../type";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 
 function formatDateBadge(value: string) {
   const date = new Date(value);
@@ -13,22 +12,29 @@ function formatDateBadge(value: string) {
 }
 
 export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
-  const { theme } = useTheme();
   return (
     <article className="flex flex-col rounded-xl border border-[#e3e1d4] bg-white p-1.5 shadow-[0_2px_12px_rgba(31,61,51,0.05)]">
       {/* Image header */}
       <div className="relative h-60 w-full overflow-hidden rounded-lg">
-        <Image
-          src={opportunity.image}
-          alt={opportunity.title}
-          fill
-          sizes="(min-width: 1280px) 30vw, 100vw"
-          className="object-cover"
-        />
-        <span className="bg-white absolute top-4 left-4 rounded-lg px-3 py-1.5 text-xs font-semibold text-[#1f3d33]">
+        {opportunity.image ? (
+          <Image
+            src={opportunity.image}
+            alt={opportunity.title || "Opportunity image"}
+            fill
+            sizes="(min-width: 1280px) 30vw, 100vw"
+            className="object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gray-100">
+            <span className="text-sm text-gray-500">No Image Available</span>
+          </div>
+        )}
+
+        <span className="absolute top-4 left-4 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-[#1f3d33]">
           {opportunity.category}
         </span>
-        <span className="bg-white absolute right-4 bottom-6 rounded-lg px-2.5 py-2 text-xs font-bold text-[#1f3d33]">
+
+        <span className="absolute right-4 bottom-6 rounded-lg bg-white px-2.5 py-2 text-xs font-bold text-[#1f3d33]">
           {formatDateBadge(opportunity.date)}
         </span>
       </div>
