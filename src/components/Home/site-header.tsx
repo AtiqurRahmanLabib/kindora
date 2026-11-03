@@ -1,11 +1,8 @@
-
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
-
 import {
   CalendarCheck,
   CalendarDays,
@@ -44,14 +41,6 @@ type MenuUser = {
   image?: string | null;
 };
 
-/* -------------------------- Theme Toggle ------------------------- */
-
-
-
-
-
-
-
 /* -------------------------- Profile Menu ------------------------- */
 
 function ProfileMenu({ user }: { user: MenuUser }) {
@@ -64,10 +53,7 @@ function ProfileMenu({ user }: { user: MenuUser }) {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
@@ -100,9 +86,7 @@ function ProfileMenu({ user }: { user: MenuUser }) {
             router.refresh();
           },
           onError: (context) => {
-            setLogoutError(
-              context.error.message || "Unable to logout."
-            );
+            setLogoutError(context.error.message || "Unable to logout.");
             setLoggingOut(false);
           },
         },
@@ -140,8 +124,6 @@ function ProfileMenu({ user }: { user: MenuUser }) {
 
       {open && (
         <div className="absolute right-0 top-12 z-50 w-64 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#e3e1d4] bg-white shadow-xl dark:border-[#34483e] dark:bg-[#1f352c]">
-
-          {/* User Info */}
           <div className="border-b border-[#e3e1d4] bg-[#f8f7f1] px-4 py-3 dark:border-[#34483e] dark:bg-[#263e33]">
             <p className="truncate text-sm font-semibold text-[#1f3d33] dark:text-[#e5eee8]">
               {user.name || "User"}
@@ -152,7 +134,6 @@ function ProfileMenu({ user }: { user: MenuUser }) {
             </p>
           </div>
 
-          {/* Profile Links */}
           <div className="p-2">
             {profileLinks.map(({ label, href, icon: Icon }) => (
               <Link
@@ -167,7 +148,6 @@ function ProfileMenu({ user }: { user: MenuUser }) {
             ))}
           </div>
 
-          {/* Logout */}
           <div className="border-t border-[#e3e1d4] p-2 dark:border-[#34483e]">
             <button
               type="button"
@@ -181,7 +161,10 @@ function ProfileMenu({ user }: { user: MenuUser }) {
           </div>
 
           {logoutError && (
-            <p role="alert" className="px-3 pb-3 text-xs text-red-600 dark:text-red-400">
+            <p
+              role="alert"
+              className="px-3 pb-3 text-xs text-red-600 dark:text-red-400"
+            >
               {logoutError}
             </p>
           )}
@@ -194,6 +177,16 @@ function ProfileMenu({ user }: { user: MenuUser }) {
 /* --------------------------- Site Header ------------------------- */
 
 export function SiteHeader() {
+  return (
+    <Suspense fallback={<div className="h-16 sm:h-18 lg:h-19.5" />}>
+      <SiteHeaderContent />
+    </Suspense>
+  );
+}
+
+/* ---------------------- Site Header Content ---------------------- */
+
+function SiteHeaderContent() {
   const { data: session } = authClient.useSession();
 
   const user = session?.user;
@@ -204,7 +197,7 @@ export function SiteHeader() {
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
-    // closeMenu();
+    closeMenu();
   }, [pathname]);
 
   useEffect(() => {
@@ -223,15 +216,10 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#e3e1d4] bg-[#f2f0e6]/95 backdrop-blur-md dark:border-[#34483e] dark:bg-[#14251f]/95">
-
       {/* Main Navbar */}
       <div className="mx-auto flex h-16 max-w-360 items-center justify-between px-5 sm:h-18 sm:px-8 lg:h-19.5 lg:px-16">
-
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-2.5"
-        >
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[#1f3d33] text-[#a8c8b7] dark:bg-[#d5e5d9] dark:text-[#1f3d33]">
             <Leaf className="size-5" />
           </span>
@@ -269,9 +257,6 @@ export function SiteHeader() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-
-     
-
           {user ? (
             <ProfileMenu
               user={{
@@ -300,11 +285,7 @@ export function SiteHeader() {
             aria-controls="mobile-navigation"
             className="flex size-9 items-center justify-center rounded-full border border-[#e3e1d4] text-[#1f3d33] transition hover:bg-white lg:hidden dark:border-[#34483e] dark:text-[#e5eee8] dark:hover:bg-[#263e33]"
           >
-            {menuOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
@@ -315,15 +296,12 @@ export function SiteHeader() {
         aria-hidden={!menuOpen}
         inert={!menuOpen}
         className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 lg:hidden ${
-          menuOpen
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0"
+          menuOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >
         <div className="min-h-0">
           <nav className="border-t border-[#e3e1d4] px-5 py-4 sm:px-8 dark:border-[#34483e]">
             <div className="flex flex-col gap-1">
-
               {navLinks.map((link) => {
                 const isActive =
                   link.href === "/"

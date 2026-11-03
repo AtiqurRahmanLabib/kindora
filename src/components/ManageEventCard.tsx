@@ -1,8 +1,7 @@
 
 import Image from "next/image";
 import { CalendarDays, Pencil, Trash2 } from "lucide-react";
-import { Opportunity } from "../../type";
-
+import type { Opportunity } from "../../type";
 
 type EventCardProps = {
   event: Opportunity;

@@ -1,4 +1,4 @@
-
+import { auth } from "@/lib/auth";
 import {
   CalendarDays,
   Users,
@@ -11,55 +11,11 @@ import {
   MapPin,
   Clock,
 } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-
-const events = [
-  {
-    id: 1,
-    title: "Beach Cleanup Drive",
-    location: "Cox's Bazar, Bangladesh",
-    category: "Environment",
-    date: "November 12, 2026",
-    time: "09:00 AM",
-    image: "https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=500",
-    status: "Published",
-    participants: 45,
-  },
-  {
-    id: 2,
-    title: "Community Tree Plantation",
-    location: "Barishal, Bangladesh",
-    category: "Environment",
-    date: "November 15, 2026",
-    time: "08:30 AM",
-    image: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=500",
-    status: "Published",
-    participants: 32,
-  },
-  {
-    id: 3,
-    title: "Winter Clothes Donation",
-    location: "Dhaka, Bangladesh",
-    category: "Community",
-    date: "November 20, 2026",
-    time: "10:00 AM",
-    image: "https://images.unsplash.com/photo-1489493585363-d69421e0edd3?w=500",
-    status: "Draft",
-    participants: 18,
-  },
-  {
-    id: 4,
-    title: "Free Education Campaign",
-    location: "Barishal, Bangladesh",
-    category: "Education",
-    date: "November 25, 2026",
-    time: "11:00 AM",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500",
-    status: "Published",
-    participants: 60,
-  },
-];
+import { Opportunity } from "../../../type";
+import { redirect } from "next/navigation";
 
 const stats = [
   {
@@ -88,11 +44,21 @@ const stats = [
   },
 ];
 
-export default function ManageEventsPage() {
+export const instant = false;
+export default async function ManageEventsPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
+  const res = await fetch(`http://localhost:5000/manage-events/${user?.email}`);
+  const events: Opportunity[] = await res.json();
+  console.log(events);
+  if (!user?.email) {
+    redirect("/login");
+  }
   return (
     <main className="min-h-screen bg-[#f7f7ef] px-4 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
-
         {/* Page Header */}
         <div className="flex flex-col justify-between gap-6 border-b border-[#dce2d8] pb-9 sm:flex-row sm:items-end">
           <div>
@@ -152,7 +118,6 @@ export default function ManageEventsPage() {
 
         {/* Events Section */}
         <section className="mt-9 overflow-hidden rounded-2xl border border-[#e0e5dc] bg-white">
-
           {/* Section Header */}
           <div className="flex flex-col justify-between gap-5 border-b border-[#e7eae4] p-6 sm:flex-row sm:items-center">
             <div>
@@ -166,9 +131,7 @@ export default function ManageEventsPage() {
 
             <div className="flex items-center gap-3 rounded-xl border border-[#e0e5dc] bg-[#fafbf7] px-4 py-3 sm:w-72">
               <Search size={17} className="text-[#78847b]" />
-              <span className="text-sm text-[#a0a89f]">
-                Search events...
-              </span>
+              <span className="text-sm text-[#a0a89f]">Search events...</span>
             </div>
           </div>
 
@@ -185,7 +148,7 @@ export default function ManageEventsPage() {
           <div className="divide-y divide-[#e7eae4]">
             {events.map((event) => (
               <div
-                key={event.id}
+                key={event._id}
                 className="grid grid-cols-1 items-center gap-5 px-5 py-5 transition hover:bg-[#fafbf7] sm:px-6 lg:grid-cols-[2fr_1fr_1.2fr_0.8fr_0.7fr] lg:gap-4"
               >
                 {/* Event Info */}
@@ -269,27 +232,7 @@ export default function ManageEventsPage() {
               </div>
             ))}
           </div>
-
-          {/* Footer */}
-          {/* <div className="flex flex-col justify-between gap-3 border-t border-[#e7eae4] bg-[#fafbf7] px-6 py-4 sm:flex-row sm:items-center">
-            <p className="text-xs text-[#89928a]">
-              Showing 4 of 24 events
-            </p>
-
-            <div className="flex items-center gap-2 text-xs font-medium text-[#536b5b]">
-              <span className="rounded-lg bg-[#1d4035] px-3 py-2 text-white">
-                1
-              </span>
-              <span className="rounded-lg px-3 py-2">2</span>
-              <span className="rounded-lg px-3 py-2">3</span>
-              <span className="rounded-lg px-3 py-2">Next →</span>
-            </div>
-          </div> */}
         </section>
-
-        <p className="mt-6 text-center text-xs text-[#9aa39a]">
-          © 2026 Wanderlast. Make every action count.
-        </p>
       </div>
     </main>
   );
