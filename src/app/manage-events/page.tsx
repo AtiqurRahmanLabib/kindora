@@ -1,59 +1,30 @@
 import { auth } from "@/lib/auth";
-import { CalendarDays, Users, Eye, Globe, Plus, Search } from "lucide-react";
+import { CalendarDays, Plus, Search } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Opportunity } from "../../../type";
 import EventCard from "../../components/EventsCard/ManageEventCard";
-
-const stats = [
-  {
-    title: "Total Events",
-    value: "24",
-    icon: CalendarDays,
-    description: "+4 this month",
-  },
-  {
-    title: "Total Participants",
-    value: "1,284",
-    icon: Users,
-    description: "Across all events",
-  },
-  {
-    title: "Total Views",
-    value: "8,492",
-    icon: Eye,
-    description: "+12% this month",
-  },
-  {
-    title: "Communities",
-    value: "12",
-    icon: Globe,
-    description: "Active communities",
-  },
-];
-
 export const instant = false;
-
 export default async function ManageEventsPage() {
-  // 1. Get user session
+  // Get user session
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   const user = session?.user;
 
-  // 2. Check authentication
+  // Check authentication
   if (!user?.email) {
     redirect("/login");
   }
 
-  // 3. Fetch only logged-in user's events
+  // Fetch user's created events
   let events: Opportunity[] = [];
 
   try {
     const res = await fetch(
-      `http://localhost:5000/manage-events/${user.email}`,
+      `${process.env.NEXT_PUBLIC_API}/manage-events/${encodeURIComponent(user.email)}`,
       {
         cache: "no-store",
       },
@@ -97,35 +68,22 @@ export default async function ManageEventsPage() {
         </div>
 
         {/* Statistics */}
-        <section className="mt-9 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
+        <section className="mt-9">
+          <div className="max-w-sm rounded-2xl border border-[#e0e5dc] bg-white p-5">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-[#78847b]">Total Events</p>
 
-            return (
-              <div
-                key={stat.title}
-                className="rounded-2xl border border-[#e0e5dc] bg-white p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-[#78847b]">
-                    {stat.title}
-                  </p>
-
-                  <div className="rounded-xl bg-[#e8f0e5] p-2.5 text-[#327455]">
-                    <Icon size={20} />
-                  </div>
-                </div>
-
-                <h2 className="mt-4 text-3xl font-bold text-[#1d4035]">
-                  {stat.value}
-                </h2>
-
-                <p className="mt-2 text-xs text-[#39815e]">
-                  {stat.description}
-                </p>
+              <div className="rounded-xl bg-[#e8f0e5] p-2.5 text-[#327455]">
+                <CalendarDays size={20} />
               </div>
-            );
-          })}
+            </div>
+
+            <h2 className="mt-4 text-3xl font-bold text-[#1d4035]">
+              {events.length}
+            </h2>
+
+            <p className="mt-2 text-xs text-[#39815e]">Events created by you</p>
+          </div>
         </section>
 
         {/* Events Section */}
@@ -145,7 +103,9 @@ export default async function ManageEventsPage() {
             <div className="flex items-center gap-3 rounded-xl border border-[#e0e5dc] bg-[#fafbf7] px-4 py-3 sm:w-72">
               <Search size={17} className="text-[#78847b]" />
 
-              <span className="text-sm text-[#a0a89f]">Search events...</span>
+              <span className="text-sm text-[#a0a89f]">
+                Your created events
+              </span>
             </div>
           </div>
 

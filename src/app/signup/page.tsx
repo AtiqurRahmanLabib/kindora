@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 const SignupPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +30,7 @@ const SignupPage = () => {
     });
     if (data) {
       console.log("Sign-up successful:", data);
+      redirect("/");
     }
     if (error) {
       console.error("Sign-up error:", error);
@@ -39,14 +41,18 @@ const SignupPage = () => {
     const data = await authClient.signIn.social({
       provider: "google",
     });
-    console.log(data);
+    if (data) {
+      redirect("/");
+    }
   };
 
   const handleGithubLogin = async () => {
     const data = await authClient.signIn.social({
       provider: "github",
     });
-    console.log(data);
+    if (data) {
+      redirect("/");
+    }
   };
   return (
     <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2">
