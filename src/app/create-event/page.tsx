@@ -1,7 +1,9 @@
+
 "use client";
 
 import { ArrowRight, Sparkles } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 const categoryOptions = [
   "Community support",
@@ -13,29 +15,50 @@ const categoryOptions = [
 ];
 
 const CreateEventPage = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!session?.user?.email) {
+      alert("Please login first");
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.log("Form submitted:", data);
-    const res = fetch(`http://localhost:5000/opportunities`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    res.then((response) => {
-      if (response.ok) {
+
+    const eventData = {
+      ...data,
+      email: session.user.email,
+    };
+
+    console.log("Form submitted:", eventData);
+
+    try {
+      const res = await fetch("http://localhost:5000/opportunities", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      if (res.ok) {
         console.log("Event created successfully");
-        redirect('/upcoming-events'); 
-        // Optionally, redirect or show a success message
+        alert("Event created successfully!");
+        router.push("/manage-events");
       } else {
         console.error("Failed to create event");
-        // Optionally, handle the error
+        alert("Failed to create event");
       }
-    });
+    } catch (error) {
+      console.error("Error creating event:", error);
+      alert("Something went wrong");
+    }
   };
+
   return (
     <div className="font-family-name:var(--font-geist-sans)">
       {/* Page hero */}
@@ -44,9 +67,11 @@ const CreateEventPage = () => {
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
             Organizer studio
           </p>
+
           <h1 className="mt-4 text-[56px] leading-[1.08] font-semibold tracking-tight text-[#1f3d33] sm:text-[68px]">
             Create a community event
           </h1>
+
           <p className="mt-4 text-lg text-[#5d6d64]">
             Share your idea, set the details, and invite neighbors to make it
             happen with you.
@@ -57,14 +82,17 @@ const CreateEventPage = () => {
       {/* Form */}
       <main className="bg-[#f2f0e6]">
         <div className="mx-auto max-w-300 px-6 py-16 sm:px-10 lg:grid lg:grid-cols-[300px_1fr] lg:gap-14">
+
           {/* Sidebar */}
           <aside className="max-lg:mb-10">
             <span className="inline-flex rounded-full bg-[#dfe8d8] px-3 py-1 text-xs font-semibold text-[#2e5b43]">
               Step 1 of 1
             </span>
+
             <h2 className="mt-5 text-[34px] leading-[1.15] font-semibold tracking-tight text-[#1f3d33]">
               Tell us about your event.
             </h2>
+
             <p className="mt-4 text-[15px] leading-relaxed text-[#5d6d64]">
               A clear, thoughtful listing helps volunteers understand how they
               can contribute.
@@ -72,8 +100,10 @@ const CreateEventPage = () => {
 
             <div className="mt-7 border-t border-[#dcdacd] pt-7">
               <p className="flex items-center gap-2 text-[15px] font-semibold text-[#2e7d6f]">
-                <Sparkles className="size-4" />A tip for great events
+                <Sparkles className="size-4" />
+                A tip for great events
               </p>
+
               <p className="mt-2 pl-6 text-[13px] leading-relaxed text-[#707c73]">
                 Be specific about the activity, accessibility, and what
                 volunteers should expect on the day.
@@ -91,10 +121,12 @@ const CreateEventPage = () => {
               <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dfe8d8] text-sm font-semibold text-[#2e5b43]">
                 01
               </span>
+
               <div>
                 <h3 className="text-xl font-semibold text-[#1f3d33]">
                   Event basics
                 </h3>
+
                 <p className="mt-0.5 text-sm text-[#707c73]">
                   Give your initiative a name and clear purpose.
                 </p>
@@ -106,6 +138,7 @@ const CreateEventPage = () => {
                 <span className="text-[13px] font-semibold text-[#1f3d33]">
                   Event title <span className="font-bold">*</span>
                 </span>
+
                 <input
                   type="text"
                   name="title"
@@ -119,6 +152,7 @@ const CreateEventPage = () => {
                 <span className="text-[13px] font-semibold text-[#1f3d33]">
                   Description <span className="font-bold">*</span>
                 </span>
+
                 <textarea
                   name="description"
                   required
@@ -132,6 +166,7 @@ const CreateEventPage = () => {
                 <span className="text-[13px] font-semibold text-[#1f3d33]">
                   Category <span className="font-bold">*</span>
                 </span>
+
                 <select
                   name="category"
                   required
@@ -141,6 +176,7 @@ const CreateEventPage = () => {
                   <option value="" disabled>
                     Select a category
                   </option>
+
                   {categoryOptions.map((category) => (
                     <option key={category} value={category}>
                       {category}
@@ -155,10 +191,12 @@ const CreateEventPage = () => {
               <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dfe8d8] text-sm font-semibold text-[#2e5b43]">
                 02
               </span>
+
               <div>
                 <h3 className="text-xl font-semibold text-[#1f3d33]">
                   Place &amp; time
                 </h3>
+
                 <p className="mt-0.5 text-sm text-[#707c73]">
                   Help people plan how and when to join.
                 </p>
@@ -170,6 +208,7 @@ const CreateEventPage = () => {
                 <span className="text-[13px] font-semibold text-[#1f3d33]">
                   Location <span className="font-bold">*</span>
                 </span>
+
                 <input
                   type="text"
                   name="location"
@@ -183,6 +222,7 @@ const CreateEventPage = () => {
                 <span className="text-[13px] font-semibold text-[#1f3d33]">
                   Event date <span className="font-bold">*</span>
                 </span>
+
                 <input
                   type="date"
                   name="date"
@@ -199,6 +239,7 @@ const CreateEventPage = () => {
               >
                 Image URL
               </label>
+
               <input
                 id="image-url"
                 type="url"
@@ -212,10 +253,12 @@ const CreateEventPage = () => {
             <div className="mt-10 flex items-center justify-end gap-3 border-t border-[#e3e1d4] pt-7">
               <button
                 type="button"
+                onClick={() => router.push("/manage-events")}
                 className="h-12 rounded-xl px-4 text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#f2f0e6]"
               >
                 Save as draft
               </button>
+
               <button
                 type="submit"
                 className="flex h-12 items-center gap-2.5 rounded-xl bg-[#1f3d33] px-6 text-[15px] font-semibold text-white shadow-[0_6px_20px_rgba(31,61,51,0.25)] transition hover:bg-[#2a5346]"

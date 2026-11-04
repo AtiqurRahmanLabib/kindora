@@ -1,12 +1,18 @@
-'use client'
+"use client";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, Code, Globe, Leaf, Moon, Sun } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Code,
+  Globe,
+  Leaf,
+  Moon,
+  Sun,
+} from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { useTheme } from "next-themes";
 
 const LoginPage = () => {
-  const { theme, setTheme } = useTheme();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -24,6 +30,20 @@ const LoginPage = () => {
     if (error) {
       console.error("Sign-in error:", error);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+    console.log(data);
+  };
+
+  const handleGithubLogin = async () => {
+    const data = await authClient.signIn.social({
+      provider: "github",
+    });
+    console.log(data);
   };
   return (
     <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2">
@@ -72,7 +92,6 @@ const LoginPage = () => {
           <button
             type="button"
             aria-label="Toggle dark mode"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="flex size-10 items-center justify-center rounded-full bg-[#f2f0e6] text-[#1f3d33] transition hover:shadow-md"
           >
             <Moon className="size-4.5 dark:hidden" />
@@ -154,6 +173,7 @@ const LoginPage = () => {
           <div className="mt-7 grid grid-cols-2 gap-4">
             <button
               type="button"
+              onClick={() => handleGoogleLogin()}
               className="flex h-11 items-center justify-center gap-2.5 rounded-lg border border-[#dcdacd] bg-white text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#faf9f3]"
             >
               <Globe className="size-4.5 text-[#1f3d33]" />
@@ -161,6 +181,7 @@ const LoginPage = () => {
             </button>
             <button
               type="button"
+              onClick={() => handleGithubLogin()}
               className="flex h-11 items-center justify-center gap-2.5 rounded-lg border border-[#dcdacd] bg-white text-[15px] font-semibold text-[#1f3d33] transition hover:bg-[#faf9f3]"
             >
               <Code className="size-4.5 text-[#1f3d33]" />

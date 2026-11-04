@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { OpportunityCard } from "@/components/OpportunityCard";
-import JoinEventButton from "@/components/JoinEventButton";
+import JoinEventButton from "@/components/ManageEventButton";
 
 import type { Opportunity } from "../../../../type";
 

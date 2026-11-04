@@ -1,21 +1,10 @@
 import { auth } from "@/lib/auth";
-import {
-  CalendarDays,
-  Users,
-  Eye,
-  Globe,
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  MapPin,
-  Clock,
-} from "lucide-react";
+import { CalendarDays, Users, Eye, Globe, Plus, Search } from "lucide-react";
 import { headers } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
-import { Opportunity } from "../../../type";
 import { redirect } from "next/navigation";
+import type { Opportunity } from "../../../type";
+import EventCard from "../../components/ManageEventCard";
 
 const stats = [
   {
@@ -45,17 +34,40 @@ const stats = [
 ];
 
 export const instant = false;
+
 export default async function ManageEventsPage() {
+  // 1. Get user session
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
   const user = session?.user;
-  const res = await fetch(`http://localhost:5000/manage-events/${user?.email}`);
-  const events: Opportunity[] = await res.json();
-  console.log(events);
+
+  // 2. Check authentication
   if (!user?.email) {
     redirect("/login");
   }
+
+  // 3. Fetch only logged-in user's events
+  let events: Opportunity[] = [];
+
+  try {
+    const res = await fetch(
+      `http://localhost:5000/manage-events/${user.email}`,
+      {
+        cache: "no-store",
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch events");
+    }
+
+    events = await res.json();
+  } catch (error) {
+    console.error("Manage events error:", error);
+  }
+
   return (
     <main className="min-h-screen bg-[#f7f7ef] px-4 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -124,6 +136,7 @@ export default async function ManageEventsPage() {
               <h2 className="text-xl font-semibold text-[#1d4035]">
                 Your Events
               </h2>
+
               <p className="mt-1 text-sm text-[#89928a]">
                 View and manage all your created events.
               </p>
@@ -131,106 +144,48 @@ export default async function ManageEventsPage() {
 
             <div className="flex items-center gap-3 rounded-xl border border-[#e0e5dc] bg-[#fafbf7] px-4 py-3 sm:w-72">
               <Search size={17} className="text-[#78847b]" />
+
               <span className="text-sm text-[#a0a89f]">Search events...</span>
             </div>
           </div>
 
           {/* Table Header */}
-          <div className="hidden grid-cols-[2fr_1fr_1.2fr_0.8fr_0.7fr] gap-4 border-b border-[#e7eae4] bg-[#fafbf7] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#89928a] lg:grid">
+          <div className="hidden grid-cols-[2fr_0.8fr_1fr_0.6fr_auto] gap-4 border-b border-[#e7eae4] bg-[#fafbf7] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#89928a] lg:grid">
             <span>Event Details</span>
             <span>Category</span>
-            <span>Date & Time</span>
+            <span>Date</span>
             <span>Status</span>
             <span className="text-right">Actions</span>
           </div>
 
           {/* Event Cards */}
           <div className="divide-y divide-[#e7eae4]">
-            {events.map((event) => (
-              <div
-                key={event._id}
-                className="grid grid-cols-1 items-center gap-5 px-5 py-5 transition hover:bg-[#fafbf7] sm:px-6 lg:grid-cols-[2fr_1fr_1.2fr_0.8fr_0.7fr] lg:gap-4"
-              >
-                {/* Event Info */}
-                <div className="flex items-center gap-4">
-                  <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-[#e8eee6]">
-                    <Image
-                      src={event.image}
-                      alt={event.title}
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  </div>
+            {events.length > 0 ? (
+              events.map((event) => <EventCard key={event._id} event={event} />)
+            ) : (
+              <div className="px-6 py-16 text-center">
+                <CalendarDays
+                  size={36}
+                  className="mx-auto mb-3 text-[#a0a89f]"
+                />
 
-                  <div className="min-w-0">
-                    <h3 className="truncate text-sm font-bold text-[#1d4035]">
-                      {event.title}
-                    </h3>
+                <h3 className="text-lg font-semibold text-[#1d4035]">
+                  No Events Found
+                </h3>
 
-                    <p className="mt-1 flex items-center gap-1 text-xs text-[#89928a]">
-                      <MapPin size={13} />
-                      {event.location}
-                    </p>
+                <p className="mt-2 text-sm text-[#89928a]">
+                  You havent created any events yet.
+                </p>
 
-                    <p className="mt-1 flex items-center gap-1 text-xs text-[#89928a] lg:hidden">
-                      <Users size={13} />
-                      {event.participants} participants
-                    </p>
-                  </div>
-                </div>
-
-                {/* Category */}
-                <div>
-                  <span className="inline-flex rounded-full bg-[#e7f0e5] px-3 py-1.5 text-xs font-semibold text-[#327455]">
-                    {event.category}
-                  </span>
-                </div>
-
-                {/* Date */}
-                <div>
-                  <p className="flex items-center gap-2 text-sm text-[#45564c]">
-                    <CalendarDays size={15} className="text-[#71907b]" />
-                    {event.date}
-                  </p>
-
-                  <p className="mt-1 flex items-center gap-2 text-xs text-[#89928a]">
-                    <Clock size={14} />
-                    {event.time}
-                  </p>
-                </div>
-
-                {/* Status */}
-                <div>
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
-                      event.status === "Published"
-                        ? "bg-[#e2f1e5] text-[#327455]"
-                        : "bg-[#fff1d9] text-[#a66c19]"
-                    }`}
-                  >
-                    {event.status}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-start gap-2 lg:justify-end">
-                  <button
-                    aria-label="Edit event"
-                    className="rounded-lg border border-[#e0e5dc] p-2.5 text-[#42604f] transition hover:bg-[#e8f0e5]"
-                  >
-                    <Pencil size={16} />
-                  </button>
-
-                  <button
-                    aria-label="Delete event"
-                    className="rounded-lg border border-[#e0e5dc] p-2.5 text-[#c45c50] transition hover:bg-red-50"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
+                <Link
+                  href="/create-event"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1d4035] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2b5948]"
+                >
+                  <Plus size={16} />
+                  Create Your First Event
+                </Link>
               </div>
-            ))}
+            )}
           </div>
         </section>
       </div>
