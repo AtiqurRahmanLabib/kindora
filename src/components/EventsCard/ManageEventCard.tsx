@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { CalendarDays, Pencil, Trash2, MapPin } from "lucide-react";
-import type { Opportunity } from "../../type";
+import type { Opportunity } from "../../../type";
 
 type EventCardProps = {
   event: Opportunity;

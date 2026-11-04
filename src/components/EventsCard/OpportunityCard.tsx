@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { ArrowRight, MapPin, Users } from "lucide-react";
-import type { Opportunity } from "../../type";
+import type { Opportunity } from "../../../type";
 import Link from "next/link";
 
 function formatDateBadge(value: string) {

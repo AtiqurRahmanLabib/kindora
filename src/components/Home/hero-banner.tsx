@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ArrowRight, Heart, Plus, Sparkles } from "lucide-react";
-import bannerImg from '../../../public/assests/bannerImage.png'
 import Link from "next/link";
 
 const avatars = [
@@ -78,8 +77,8 @@ export function HeroBanner() {
           <div className="pointer-events-none absolute -right-16 -bottom-24 size-105 rounded-full border-2 border-[#9dbfae]" />
           <div className="relative">
             <Image
-              src={bannerImg}
-              alt="Volunteers planting seedlings together outdoors"
+              src="/assests/bannerImage.png"
+              alt="banner"
               width={820}
               height={920}
               preload
@@ -112,9 +111,7 @@ export function HeroBanner() {
                 <span className="block text-lg leading-tight font-bold text-[#1f3d33]">
                   248 joined
                 </span>
-                <span className="block text-sm text-[#707c73]">
-                  This week
-                </span>
+                <span className="block text-sm text-[#707c73]">This week</span>
               </span>
             </div>
           </div>

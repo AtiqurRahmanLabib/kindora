@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Opportunity } from "../../../type";
-import EventCard from "../../components/ManageEventCard";
+import EventCard from "../../components/EventsCard/ManageEventCard";
 
 const stats = [
   {

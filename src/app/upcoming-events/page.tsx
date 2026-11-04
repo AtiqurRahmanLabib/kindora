@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Search } from "lucide-react";
-import { OpportunityCard } from "@/components/OpportunityCard";
+import { OpportunityCard } from "@/components/EventsCard/OpportunityCard";
 import type { Opportunity } from "../../../type";
 
 export const metadata: Metadata = {

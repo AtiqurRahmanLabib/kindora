@@ -3,7 +3,7 @@ import { ChevronDown, Clock, Heart } from "lucide-react";
 import {
   JoinedEventsCard,
   type JoinedEvent,
-} from "@/components/JoinedEventsCard";
+} from "@/components/EventsCard/JoinedEventsCard";
 
 export const metadata: Metadata = {
   title: "Joined events — Kindora",

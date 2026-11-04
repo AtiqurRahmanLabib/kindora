@@ -1,9 +1,9 @@
 "use client";
+
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Leaf, PenLine, Check } from "lucide-react";
 import Image from "next/image";
-
 
 const stats = [
   { value: "14", label: "Events" },
@@ -15,45 +15,68 @@ const causes = ["Environment", "Food security", "Community care", "Education"];
 
 const formatMonthYear = (date?: Date | string) => {
   if (!date) return "—";
-  return new Date(date).toLocaleDateString("en-US", {
+
+  return new Date(
+    date instanceof Date ? date.getTime() : date,
+  ).toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
   });
 };
 
 const ProfilePage = () => {
-
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  // Edit mode এর state
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  
+  // Edit mode চালু করার সময় existing data দেখাবে
+  const handleEdit = () => {
+    setName(user?.name || "");
+    setImage(user?.image || "");
+    setError("");
+    setIsEditing(true);
+  };
 
+  // Cancel করলে আগের data ফিরে আসবে
+  const handleCancel = () => {
+    setName(user?.name || "");
+    setImage(user?.image || "");
+    setError("");
+    setIsEditing(false);
+  };
 
+  // Profile update
   const handleSave = async () => {
     if (!name.trim()) {
       setError("Display name cannot be empty.");
       return;
     }
+
     setSaving(true);
     setError("");
-    const { error } = await authClient.updateUser({
-      name: name.trim(),
-      image: image.trim() || undefined,
-    });
-    setSaving(false);
 
-    if (error) {
-      setError(error.message || "Something went wrong.");
-      return;
+    try {
+      const { error } = await authClient.updateUser({
+        name: name.trim(),
+        image: image.trim() || undefined,
+      });
+
+      if (error) {
+        setError(error.message || "Something went wrong.");
+        return;
+      }
+
+      setIsEditing(false);
+    } catch {
+      setError("Failed to update profile. Please try again.");
+    } finally {
+      setSaving(false);
     }
-    setIsEditing(false);
   };
 
   if (isPending) {
@@ -64,7 +87,15 @@ const ProfilePage = () => {
     );
   }
 
-  const joinedYear = user?.createdAt
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#f7f6ef] p-10 text-[#5f6f67]">
+        Please login to view your profile.
+      </div>
+    );
+  }
+
+  const joinedYear = user.createdAt
     ? new Date(user.createdAt).getFullYear()
     : "";
 
@@ -75,12 +106,15 @@ const ProfilePage = () => {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2f6b52]">
           Account Settings
         </p>
+
         <h1 className="mt-5 text-6xl font-medium tracking-tight text-[#1e3d33]">
           Your profile
         </h1>
+
         <p className="mt-3 text-lg text-[#6f7c75]">
           Manage how you appear across the Kindora community.
         </p>
+
         <hr className="mt-12 border-[#e3e2d9]" />
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[330px_1fr]">
@@ -94,18 +128,21 @@ const ProfilePage = () => {
                 backgroundSize: "20px 20px",
               }}
             />
+
             <div className="flex flex-col items-center px-6 pb-6">
               <Image
-              width={100}
+                width={100}
                 height={100}
-                src={user?.image || "https://i.pravatar.cc/200"}
-                alt={user?.name || "User"}
+                src={user.image || "https://i.pravatar.cc/200"}
+                alt={user.name || "User"}
                 className="-mt-12.5 h-23 w-23 rounded-full border-4 border-white object-cover"
               />
+
               <h2 className="mt-4 text-2xl font-medium text-[#1f2a25]">
-                {user?.name}
+                {user.name}
               </h2>
-              <p className="text-sm text-[#6f7c75]">{user?.email}</p>
+
+              <p className="text-sm text-[#6f7c75]">{user.email}</p>
 
               <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#d9eadf] px-4 py-1.5 text-xs text-[#2f6b52]">
                 <Leaf size={14} />
@@ -122,6 +159,7 @@ const ProfilePage = () => {
                   }`}
                 >
                   <p className="text-lg font-bold text-[#1f2a25]">{s.value}</p>
+
                   <p className="text-xs text-[#6f7c75]">{s.label}</p>
                 </div>
               ))}
@@ -135,15 +173,18 @@ const ProfilePage = () => {
                 <h3 className="text-2xl font-medium text-[#1f2a25]">
                   Personal information
                 </h3>
+
                 <p className="mt-1 text-sm text-[#6f7c75]">
                   Keep your contact and public details current.
                 </p>
               </div>
 
-              {/* Edit profile  <->  Cancel */}
+              {/* Edit / Cancel */}
               <button
-                onClick={() => (isEditing ? handleCancel() : setIsEditing(true))}
-                className="flex items-center gap-2 rounded-xl border border-[#e3e2d9] px-5 py-3 text-sm font-semibold text-[#1f2a25] transition hover:bg-[#f7f6ef]"
+                type="button"
+                onClick={() => (isEditing ? handleCancel() : handleEdit())}
+                disabled={saving}
+                className="flex items-center gap-2 rounded-xl border border-[#e3e2d9] px-5 py-3 text-sm font-semibold text-[#1f2a25] transition hover:bg-[#f7f6ef] disabled:opacity-60"
               >
                 <PenLine size={16} />
                 {isEditing ? "Cancel" : "Edit profile"}
@@ -153,16 +194,19 @@ const ProfilePage = () => {
             <hr className="my-7 border-[#e3e2d9]" />
 
             <div className="grid gap-8 sm:grid-cols-2">
-              <Field label="Full name" value={user?.name} />
-              <Field label="Email address" value={user?.email} />
+              <Field label="Full name" value={user.name} />
+
+              <Field label="Email address" value={user.email} />
+
               <Field label="Home community" value="Portland, Oregon" />
+
               <Field
                 label="Member since"
-                value={formatMonthYear(user?.createdAt)}
+                value={formatMonthYear(user.createdAt)}
               />
             </div>
 
-            {/* শুধু Edit mode এ দেখাবে */}
+            {/* Edit mode */}
             {isEditing && (
               <>
                 <hr className="my-7 border-[#e3e2d9]" />
@@ -176,6 +220,7 @@ const ProfilePage = () => {
                     <label className="text-xs font-bold text-[#1f2a25]">
                       Display name
                     </label>
+
                     <input
                       type="text"
                       value={name}
@@ -183,10 +228,12 @@ const ProfilePage = () => {
                       className="mt-2 w-full rounded-xl border border-[#e3e2d9] px-4 py-3 text-[#1f2a25] outline-none transition focus:border-[#2f6b52] focus:ring-2 focus:ring-[#2f6b52]/20"
                     />
                   </div>
+
                   <div>
                     <label className="text-xs font-bold text-[#1f2a25]">
                       Photo URL
                     </label>
+
                     <input
                       type="url"
                       value={image}
@@ -201,11 +248,13 @@ const ProfilePage = () => {
 
                 <div className="mt-6 flex justify-end">
                   <button
+                    type="button"
                     onClick={handleSave}
                     disabled={saving}
                     className="flex items-center gap-2 rounded-xl bg-[#1e3d33] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#16302a] disabled:opacity-60"
                   >
                     {saving ? "Saving..." : "Save changes"}
+
                     {!saving && <Check size={16} />}
                   </button>
                 </div>
@@ -217,9 +266,11 @@ const ProfilePage = () => {
             <h4 className="text-lg font-medium text-[#1f2a25]">
               Causes you care about
             </h4>
+
             <p className="mt-1 text-sm text-[#6f7c75]">
               Used to personalize your event recommendations.
             </p>
+
             <div className="mt-5 flex flex-wrap gap-3">
               {causes.map((c) => (
                 <span
@@ -237,11 +288,13 @@ const ProfilePage = () => {
   );
 };
 
+// Reusable Field component
 const Field = ({ label, value }: { label: string; value?: string }) => (
   <div>
     <p className="text-[11px] font-medium uppercase tracking-wider text-[#6f7c75]">
       {label}
     </p>
+
     <p className="mt-1 font-bold text-[#1f2a25]">{value || "—"}</p>
   </div>
 );
