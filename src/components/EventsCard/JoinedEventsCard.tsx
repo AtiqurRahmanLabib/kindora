@@ -1,23 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Check, MapPin } from "lucide-react";
-
-export type JoinedEvent = {
-  id: string;
-  title: string;
-  category: string;
-  status: string;
-  location: string;
-  date: string;
-  image: string;
-};
+import { JoinedEvent } from "../../../type";
 
 export function JoinedEventsCard({ event }: { event: JoinedEvent }) {
-  const isUpcoming = event.status === "Upcoming";
-
   return (
     <article className="grid overflow-hidden rounded-2xl border border-[#e3e1d4] bg-white shadow-[0_1px_2px_rgba(31,61,51,0.04)] sm:grid-cols-[210px_1fr]">
-      {/* Cover image */}
       <div className="relative h-44 sm:h-full sm:min-h-64">
         <Image
           src={event.image}
@@ -28,20 +16,10 @@ export function JoinedEventsCard({ event }: { event: JoinedEvent }) {
         />
       </div>
 
-      {/* Content */}
       <div className="flex flex-col p-5 sm:p-6">
         <div className="flex items-center justify-between gap-3">
           <span className="rounded-full bg-[#e4ecdb] px-3.5 py-1.5 text-[13px] font-semibold text-[#2e5b43]">
             {event.category}
-          </span>
-          <span
-            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium ${
-              isUpcoming
-                ? "bg-[#f0efe3] text-[#6f7b71]"
-                : "bg-[#f7e8c8] text-[#8a5a1f]"
-            }`}
-          >
-            {event.status}
           </span>
         </div>
 
@@ -66,7 +44,7 @@ export function JoinedEventsCard({ event }: { event: JoinedEvent }) {
             You&rsquo;re joining
           </p>
           <Link
-            href="/upcoming-events"
+            href={`/upcoming-events/${event.eventId}`}
             className="flex items-center gap-2 rounded-lg border border-[#dcdacd] bg-white px-5 py-2.5 text-sm font-semibold text-[#1f3d33] transition hover:bg-[#f5f4ea]"
           >
             View details

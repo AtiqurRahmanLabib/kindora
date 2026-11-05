@@ -4,6 +4,7 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Leaf, PenLine, Check } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const stats = [
   { value: "14", label: "Events" },
@@ -34,7 +35,6 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // Edit mode চালু করার সময় existing data দেখাবে
   const handleEdit = () => {
     setName(user?.name || "");
     setImage(user?.image || "");
@@ -42,7 +42,6 @@ const ProfilePage = () => {
     setIsEditing(true);
   };
 
-  // Cancel করলে আগের data ফিরে আসবে
   const handleCancel = () => {
     setName(user?.name || "");
     setImage(user?.image || "");
@@ -50,7 +49,6 @@ const ProfilePage = () => {
     setIsEditing(false);
   };
 
-  // Profile update
   const handleSave = async () => {
     if (!name.trim()) {
       setError("Display name cannot be empty.");
@@ -72,6 +70,7 @@ const ProfilePage = () => {
       }
 
       setIsEditing(false);
+      toast.success("Profile updated successfully!");
     } catch {
       setError("Failed to update profile. Please try again.");
     } finally {
@@ -102,7 +101,6 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-[#f7f6ef] px-6 py-16 md:px-34.25">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2f6b52]">
           Account Settings
         </p>
@@ -118,7 +116,6 @@ const ProfilePage = () => {
         <hr className="mt-12 border-[#e3e2d9]" />
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[330px_1fr]">
-          {/* Left card */}
           <div className="h-fit overflow-hidden rounded-3xl border border-[#e3e2d9] bg-white">
             <div
               className="h-25 bg-[#1e3d33]"
@@ -166,7 +163,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Right card */}
           <div className="rounded-3xl border border-[#e3e2d9] bg-white p-8 md:p-9">
             <div className="flex items-start justify-between">
               <div>
@@ -179,7 +175,6 @@ const ProfilePage = () => {
                 </p>
               </div>
 
-              {/* Edit / Cancel */}
               <button
                 type="button"
                 onClick={() => (isEditing ? handleCancel() : handleEdit())}
@@ -206,7 +201,6 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Edit mode */}
             {isEditing && (
               <>
                 <hr className="my-7 border-[#e3e2d9]" />
@@ -288,7 +282,6 @@ const ProfilePage = () => {
   );
 };
 
-// Reusable Field component
 const Field = ({ label, value }: { label: string; value?: string }) => (
   <div>
     <p className="text-[11px] font-medium uppercase tracking-wider text-[#6f7c75]">

@@ -7,19 +7,16 @@ import type { Opportunity } from "../../../type";
 import EventCard from "../../components/EventsCard/ManageEventCard";
 export const instant = false;
 export default async function ManageEventsPage() {
-  // Get user session
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   const user = session?.user;
 
-  // Check authentication
   if (!user?.email) {
     redirect("/login");
   }
 
-  // Fetch user's created events
   let events: Opportunity[] = [];
 
   try {
@@ -42,7 +39,6 @@ export default async function ManageEventsPage() {
   return (
     <main className="min-h-screen bg-[#f7f7ef] px-4 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        {/* Page Header */}
         <div className="flex flex-col justify-between gap-6 border-b border-[#dce2d8] pb-9 sm:flex-row sm:items-end">
           <div>
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#438263]">
@@ -67,7 +63,6 @@ export default async function ManageEventsPage() {
           </Link>
         </div>
 
-        {/* Statistics */}
         <section className="mt-9">
           <div className="max-w-sm rounded-2xl border border-[#e0e5dc] bg-white p-5">
             <div className="flex items-center justify-between">
@@ -86,9 +81,7 @@ export default async function ManageEventsPage() {
           </div>
         </section>
 
-        {/* Events Section */}
         <section className="mt-9 overflow-hidden rounded-2xl border border-[#e0e5dc] bg-white">
-          {/* Section Header */}
           <div className="flex flex-col justify-between gap-5 border-b border-[#e7eae4] p-6 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-xl font-semibold text-[#1d4035]">
@@ -109,7 +102,6 @@ export default async function ManageEventsPage() {
             </div>
           </div>
 
-          {/* Table Header */}
           <div className="hidden grid-cols-[2fr_0.8fr_1fr_0.6fr_auto] gap-4 border-b border-[#e7eae4] bg-[#fafbf7] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#89928a] lg:grid">
             <span>Event Details</span>
             <span>Category</span>
@@ -118,7 +110,6 @@ export default async function ManageEventsPage() {
             <span className="text-right">Actions</span>
           </div>
 
-          {/* Event Cards */}
           <div className="divide-y divide-[#e7eae4]">
             {events.length > 0 ? (
               events.map((event) => <EventCard key={event._id} event={event} />)

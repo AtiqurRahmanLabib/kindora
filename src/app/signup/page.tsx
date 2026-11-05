@@ -12,11 +12,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignupPage = () => {
+  const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const formData = new FormData(event.currentTarget);
     const userData = Object.fromEntries(formData.entries()) as {
       name: string;
@@ -24,39 +28,55 @@ const SignupPage = () => {
       password: string;
       image?: string;
     };
-    console.log("User data:", userData);
+
     const { data, error } = await authClient.signUp.email({
       ...userData,
     });
-    if (data) {
-      console.log("Sign-up successful:", data);
-      redirect("/");
-    }
+
     if (error) {
-      console.error("Sign-up error:", error);
+      toast.error(error.message || "Sign-up failed. Please try again.");
+      return;
+    }
+
+    if (data) {
+      toast.success("Account created successfully! Welcome aboard.");
+      router.push("/");
     }
   };
 
   const handleGoogleLogin = async () => {
-    const data = await authClient.signIn.social({
+    toast.loading("Connecting to Google...");
+
+    const { data, error } = await authClient.signIn.social({
       provider: "google",
     });
+
+    if (error) {
+      toast.error(error.message || "Google sign-in failed!");
+      return;
+    }
+
     if (data) {
-      redirect("/");
+      toast.success("Google authentication successful!");
     }
   };
 
   const handleGithubLogin = async () => {
-    const data = await authClient.signIn.social({
+    const { data, error } = await authClient.signIn.social({
       provider: "github",
     });
+
+    if (error) {
+      toast.error(error.message || "GitHub sign-in failed!");
+      return;
+    }
+
     if (data) {
-      redirect("/");
+      toast.success("GitHub authentication successful!");
     }
   };
   return (
     <div className="grid min-h-screen gap-4 bg-[#faf9f3] p-3 sm:p-4 lg:grid-cols-2">
-      {/* Left: image panel */}
       <div className="relative min-h-105 overflow-hidden rounded-2xl">
         <Image
           src="/signup-pack.jpg"
@@ -65,7 +85,6 @@ const SignupPage = () => {
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 50vw"
         />
-        {/* Dark gradient for readability */}
         <div className="absolute inset-0 bg-linear-to-b from-black/15 via-black/5 to-black/70" />
 
         <div className="absolute inset-0 flex flex-col p-8 sm:p-10">
@@ -88,7 +107,6 @@ const SignupPage = () => {
         </div>
       </div>
 
-      {/* Right: form column */}
       <div className="flex flex-col px-6 pb-10 sm:px-10 lg:px-16">
         <div className="flex items-center justify-between pt-2">
           <Link

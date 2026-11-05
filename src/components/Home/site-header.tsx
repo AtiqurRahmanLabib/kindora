@@ -17,8 +17,7 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
-
-/* ----------------------------- Data ----------------------------- */
+import { toast } from "sonner";
 
 const navLinks = [
   { label: "Upcoming Events", href: "/upcoming-events" },
@@ -41,13 +40,10 @@ type MenuUser = {
   image?: string | null;
 };
 
-/* -------------------------- Profile Menu ------------------------- */
-
 function ProfileMenu({ user }: { user: MenuUser }) {
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-  const [logoutError, setLogoutError] = useState("");
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -72,29 +68,18 @@ function ProfileMenu({ user }: { user: MenuUser }) {
   }, []);
 
   const handleLogout = async () => {
-    if (loggingOut) return;
+    const { data, error } = await authClient.signOut();
 
-    setLoggingOut(true);
-    setLogoutError("");
-    setOpen(false);
+    if (error) {
+      toast.error(error.message || "Unable to logout.");
+      return;
+    }
 
-    try {
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.replace("/login");
-            router.refresh();
-          },
-          onError: (context) => {
-            setLogoutError(context.error.message || "Unable to logout.");
-            setLoggingOut(false);
-          },
-        },
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-      setLogoutError("Something went wrong. Please try again.");
-      setLoggingOut(false);
+    if (data) {
+      toast.success("Logged out successfully!");
+      setOpen(false);
+      router.replace("/login");
+      router.refresh();
     }
   };
 
@@ -152,29 +137,17 @@ function ProfileMenu({ user }: { user: MenuUser }) {
             <button
               type="button"
               onClick={handleLogout}
-              disabled={loggingOut}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-400 dark:hover:bg-red-950/30"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
             >
               <LogOut size={17} strokeWidth={1.8} />
-              {loggingOut ? "Logging out..." : "Logout"}
+              Logout
             </button>
           </div>
-
-          {logoutError && (
-            <p
-              role="alert"
-              className="px-3 pb-3 text-xs text-red-600 dark:text-red-400"
-            >
-              {logoutError}
-            </p>
-          )}
         </div>
       )}
     </div>
   );
 }
-
-/* --------------------------- Site Header ------------------------- */
 
 export function SiteHeader() {
   return (
@@ -183,8 +156,6 @@ export function SiteHeader() {
     </Suspense>
   );
 }
-
-/* ---------------------- Site Header Content ---------------------- */
 
 function SiteHeaderContent() {
   const { data: session } = authClient.useSession();
@@ -216,9 +187,7 @@ function SiteHeaderContent() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#e3e1d4] bg-[#f2f0e6]/95 backdrop-blur-md dark:border-[#34483e] dark:bg-[#14251f]/95">
-      {/* Main Navbar */}
       <div className="mx-auto flex h-16 max-w-360 items-center justify-between px-5 sm:h-18 sm:px-8 lg:h-19.5 lg:px-16">
-        {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[#1f3d33] text-[#a8c8b7] dark:bg-[#d5e5d9] dark:text-[#1f3d33]">
             <Leaf className="size-5" />
@@ -229,7 +198,6 @@ function SiteHeaderContent() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
           {navLinks.map((link) => {
             const isActive =
@@ -255,7 +223,6 @@ function SiteHeaderContent() {
           })}
         </nav>
 
-        {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
           {user ? (
             <ProfileMenu
@@ -274,7 +241,6 @@ function SiteHeaderContent() {
             </Link>
           )}
 
-          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -290,7 +256,6 @@ function SiteHeaderContent() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       <div
         id="mobile-navigation"
         aria-hidden={!menuOpen}

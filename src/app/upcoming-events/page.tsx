@@ -39,14 +39,12 @@ async function OpportunitiesSection() {
   }
   const opportunities = (await res.json()) as Opportunity[];
 
-  // "Sorted by: Soonest"
   const sorted = [...opportunities].sort(
     (a, b) => Date.parse(a.date) - Date.parse(b.date)
   );
 
   return (
     <>
-      {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <label className="relative block max-w-full sm:w-82.5">
           <Search className="absolute top-1/2 left-4 size-4.5 -translate-y-1/2 text-[#8a958c]" />
@@ -76,7 +74,6 @@ async function OpportunitiesSection() {
         </div>
       </div>
 
-      {/* Meta row */}
       <div className="mt-6 flex items-center justify-between">
         <p className="text-sm font-bold text-[#1f3d33]">
           {sorted.length} opportunities
@@ -84,7 +81,6 @@ async function OpportunitiesSection() {
         <p className="text-sm text-[#707c73]">Sorted by: Soonest</p>
       </div>
 
-      {/* Cards */}
       <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {sorted.map((opportunity) => (
           <OpportunityCard
@@ -100,7 +96,6 @@ async function OpportunitiesSection() {
 const UpcomingEventsPage = () => {
   return (
     <div className="font-family-name:var(--font-geist-sans)">
-      {/* Page hero */}
       <section className="border-b border-[#e3e1d4] bg-[#edefe8]">
         <div className="mx-auto max-w-340 px-6 py-20 text-center sm:px-10">
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
@@ -116,7 +111,6 @@ const UpcomingEventsPage = () => {
         </div>
       </section>
 
-      {/* Event listing */}
       <main className="bg-[#f2f0e6]">
         <div className="mx-auto max-w-340 px-6 py-16 sm:px-10">
           <Suspense fallback={<OpportunitiesFallback />}>

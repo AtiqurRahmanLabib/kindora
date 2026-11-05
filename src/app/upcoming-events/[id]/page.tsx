@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -19,14 +18,12 @@ import JoinEventButton from "@/components/JoinedEventButton";
 
 import type { Opportunity } from "../../../../type";
 
-/* -------------------------- Event Details ------------------------- */
-
 const EventDetails = async ({
-  parameters,
+  params,
 }: {
-  parameters: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }) => {
-  const { id } = await parameters;
+  const { id } = await params;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API}/opportunities/${id}`,
@@ -41,13 +38,9 @@ const EventDetails = async ({
 
   const opportunity = (await res.json()) as Opportunity;
 
-  // Related events
-  const related = await fetch(
-    `${process.env.NEXT_PUBLIC_API}/opportunities`,
-    {
-      next: { revalidate: 60 },
-    },
-  )
+  const related = await fetch(`${process.env.NEXT_PUBLIC_API}/opportunities`, {
+    next: { revalidate: 60 },
+  })
     .then((res) => {
       if (!res.ok) {
         throw new Error("Failed to fetch related events");
@@ -61,14 +54,11 @@ const EventDetails = async ({
     .filter((item) => item._id !== opportunity._id)
     .slice(0, 3);
 
-  // Event calculations
   const spotsFilledPercent =
     opportunity.totalSpots > 0
       ? Math.min(
           100,
-          Math.round(
-            (opportunity.participants / opportunity.totalSpots) * 100,
-          ),
+          Math.round((opportunity.participants / opportunity.totalSpots) * 100),
         )
       : 0;
 
@@ -77,29 +67,21 @@ const EventDetails = async ({
     opportunity.totalSpots - opportunity.participants,
   );
 
-  const heroDate = new Date(opportunity.date).toLocaleDateString(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    },
-  );
+  const heroDate = new Date(opportunity.date).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
-  const sidebarDate = new Date(opportunity.date).toLocaleDateString(
-    "en-US",
-    {
-      weekday: "long",
-      month: "short",
-      day: "numeric",
-    },
-  );
+  const sidebarDate = new Date(opportunity.date).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
 
   return (
     <main className="bg-[#f2f0e6]">
       <div className="mx-auto max-w-340 px-6 py-10 sm:px-10 lg:px-16">
-
-        {/* Hero panel */}
         <div className="relative mt-5 h-120 overflow-hidden rounded-2xl">
           <Image
             src={opportunity.image}
@@ -135,13 +117,8 @@ const EventDetails = async ({
           </div>
         </div>
 
-        {/* Content */}
         <div className="mt-14 grid items-start gap-12 lg:grid-cols-[1fr_400px] lg:gap-16">
-
-          {/* Left column */}
           <div>
-
-            {/* Organizer */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="flex size-12 items-center justify-center rounded-full bg-[#e4ecdb] text-[#2e5b43]">
@@ -169,7 +146,6 @@ const EventDetails = async ({
 
             <div className="mt-6 border-t border-[#e3e1d4]" />
 
-            {/* About */}
             <h2 className="mt-8 text-[34px] leading-tight font-semibold tracking-tight text-[#1f3d33]">
               {opportunity.details.heading}
             </h2>
@@ -178,7 +154,6 @@ const EventDetails = async ({
               {opportunity.details.about}
             </p>
 
-            {/* Impact */}
             <div className="mt-8 rounded-2xl bg-[#e4ecdb] p-7">
               <p className="flex items-center gap-3 text-[17px] font-bold text-[#2e5b43]">
                 <Leaf className="size-5 shrink-0" />
@@ -190,7 +165,6 @@ const EventDetails = async ({
               </p>
             </div>
 
-            {/* What to bring */}
             <h3 className="mt-10 text-xl font-semibold text-[#1f3d33]">
               What to bring
             </h3>
@@ -208,16 +182,12 @@ const EventDetails = async ({
             </ul>
           </div>
 
-          {/* Sidebar */}
           <aside className="rounded-2xl border border-[#e3e1d4] bg-white p-7 shadow-[0_4px_24px_rgba(31,61,51,0.06)] lg:sticky lg:top-6">
-
             <h2 className="text-lg font-semibold text-[#1f3d33]">
               Event information
             </h2>
 
             <div className="mt-7 space-y-6">
-
-              {/* Date */}
               <div className="flex items-start gap-4">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#e4ecdb] text-[#2e5b43]">
                   <Calendar className="size-5" />
@@ -238,7 +208,6 @@ const EventDetails = async ({
                 </div>
               </div>
 
-              {/* Location */}
               <div className="flex items-start gap-4">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#e4ecdb] text-[#2e5b43]">
                   <MapPin className="size-5" />
@@ -255,7 +224,6 @@ const EventDetails = async ({
                 </div>
               </div>
 
-              {/* Community */}
               <div className="flex items-start gap-4">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#e4ecdb] text-[#2e5b43]">
                   <Users className="size-5" />
@@ -277,7 +245,6 @@ const EventDetails = async ({
               </div>
             </div>
 
-            {/* Spots progress */}
             <div className="mt-7">
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#e5e3d8]">
                 <div
@@ -294,7 +261,6 @@ const EventDetails = async ({
               </p>
             </div>
 
-            {/* Join event */}
             <JoinEventButton opportunity={opportunity} />
 
             <p className="mt-4 text-center text-[13px] text-[#707c73]">
@@ -306,7 +272,6 @@ const EventDetails = async ({
           </aside>
         </div>
 
-        {/* Recommendations */}
         {recommendations.length > 0 && (
           <section className="mt-24">
             <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
@@ -319,10 +284,7 @@ const EventDetails = async ({
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {recommendations.map((item) => (
-                <OpportunityCard
-                  key={item._id}
-                  opportunity={item}
-                />
+                <OpportunityCard key={item._id} opportunity={item} />
               ))}
             </div>
           </section>
@@ -332,13 +294,9 @@ const EventDetails = async ({
   );
 };
 
-/* ----------------------------- Page ------------------------------ */
-
-const Page = ({
-  params,
-}: PageProps<"/upcoming-events/[id]">) => {
+const Page = ({ params }: PageProps<"/upcoming-events/[id]">) => {
   return (
-    <div className="bg-[#f2f0e6] font-family-name:var(--font-geist-sans)">
+    <div className="bg-[#f2f0e6] font-sans">
       <div className="px-4 pt-4">
         <Link
           href="/upcoming-events"
@@ -352,13 +310,11 @@ const Page = ({
       <Suspense
         fallback={
           <div className="mx-auto max-w-340 px-6 py-20 text-center">
-            <p className="text-[#1f3d33]">
-              Loading event details...
-            </p>
+            <p className="text-[#1f3d33]">Loading event details...</p>
           </div>
         }
       >
-        <EventDetails parameters={params} />
+        <EventDetails params={params} />
       </Suspense>
     </div>
   );

@@ -14,7 +14,6 @@ function formatDateBadge(value: string) {
 export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
   return (
     <article className="flex flex-col rounded-xl border border-[#e3e1d4] bg-white p-1.5 shadow-[0_2px_12px_rgba(31,61,51,0.05)]">
-      {/* Image header */}
       <div className="relative h-60 w-full overflow-hidden rounded-lg">
         {opportunity.image ? (
           <Image
@@ -39,7 +38,6 @@ export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
         </span>
       </div>
 
-      {/* Copy */}
       <div className="flex flex-1 flex-col px-4 pt-5">
         <h3 className="text-xl font-semibold text-[#1f3d33]">
           {opportunity.title}
@@ -53,14 +51,13 @@ export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
         </p>
       </div>
 
-      {/* footer */}
       <div className="mt-6 flex items-center justify-between border-t border-[#e3e1d4] px-4 py-4">
         <p className="flex items-center gap-2 text-sm text-[#707c73]">
           <Users className="size-4 shrink-0" />
           {opportunity.participants} joining
         </p>
         <Link
-          href={`upcoming-events/${opportunity._id}`}
+          href={`/upcoming-events/${opportunity._id}`}
           className="flex items-center gap-1.5 text-sm font-semibold text-[#1f5a48] transition-opacity hover:opacity-70"
         >
           View event

@@ -30,13 +30,28 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `reactCompiler: true` — React Compiler is active (via `babel-plugin-react-compiler`).
 - The `turbopack.rules` entry wires `@tailwindcss/turbopack` for CSS — don't remove it.
 
+## Auth & route protection (better-auth)
+
+- Auth is `better-auth` with the MongoDB adapter (database `volunteer_hub`, `src/lib/auth.ts`): email/password plus Google and GitHub OAuth, and the JWT plugin. Server side uses the `auth` object; client side uses `authClient` and the `signIn`/`signUp`/`useSession` exports from `src/lib/auth-client.ts`. Local route handler: `src/app/api/auth/[...all]/route.ts`.
+- Route protection is `src/proxy.ts` — in Next 16 the file convention is `proxy.ts`, not `middleware.ts` (export a function named `proxy`). It redirects unauthenticated users of its matcher routes to `/login`.
+- JWT helpers: `getTokenFromServer()` in `src/lib/GetTokenFromServer.tsx`; client version is the async function `GetTokenFromClient` in `src/lib/GetTokenFormClinet.tsx` (filename misspelling is intentional-looking — match it rather than "fixing" imports elsewhere).
+
+## Data source
+
+- There is no local events API. Opportunities, joined events, and organizer events are fetched (mostly server-side) from a separate backend at `process.env.NEXT_PUBLIC_API` (currently `http://localhost:5000`): `/opportunities`, `/opportunities/:id`, `/joined-events/<email>`, `/manage-events/<email>`. That backend is not in this repo; if fetches fail at runtime, check that it's running and that `NEXT_PUBLIC_API` is set.
+
+## Env
+
+- A local `.env` is required (gitignored via `.env*`): `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `MONGODB_URI`, `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`, `NEXT_PUBLIC_API`.
+
 ## Structure & conventions
 
 - Single Next.js App Router app (no monorepo). Entrypoints: `src/app/`.
-- Site page sections live in `src/components/site/` (e.g. `site-header.tsx`, `hero-banner.tsx`); shadcn-generated primitives in `src/components/ui/`; app styles in `src/app/globals.css` (Tailwind v4 CSS variables, no tailwind.config).
+- Page-section components live in `src/components/Home/` (e.g. `site-header.tsx`, `hero-banner.tsx`); event cards in `src/components/EventsCard/`; standalone bits like `Footer.tsx` and `JoinedEventButton.tsx` sit directly in `src/components/`; shadcn-generated primitives in `src/components/ui/`; app styles in `src/app/globals.css` (Tailwind v4 CSS variables, no tailwind.config).
 - shadcn style is `base-nova` (`components.json`): components are built on `@base-ui/react` primitives, not Radix, and import `cn` from the `cn` npm package (not `@/lib/utils`).
-- Path alias: `@/*` → `src/*` (`tsconfig.json`).
+- Path alias: `@/*` → `src/*` (`tsconfig.json`). Shared domain types (`Opportunity`, `JoinedEvent`) live in root-level `type.ts` and are imported with relative paths (e.g. `../../../type`) even though the alias exists — both styles are used, keep either.
+- `SiteHeader`, `Footer`, and the sonner `Toaster` are mounted once in `src/app/layout.tsx`; pages should not re-render them.
 
 ## Known quirk
 
-- `layout.tsx` loads Geist as `--font-geist-sans`, but `globals.css` maps theme `--font-sans` to an undefined `--font-sans` variable, so Geist isn't applied globally — apply it explicitly per-page/component (see `src/app/page.tsx`).
+- `layout.tsx` loads Geist as `--font-geist-sans`, but `globals.css` maps theme `--font-sans` to an undefined variable, so Geist isn't applied globally — apply it explicitly per-page/component (see `src/app/page.tsx`).

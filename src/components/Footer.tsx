@@ -30,7 +30,6 @@ const Footer = () => {
     <footer className="bg-[#17281f]">
       <div className="mx-auto max-w-360 px-6 pt-16 pb-8 sm:px-10 lg:px-16">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
-          {/* Brand */}
           <div>
             <a href="#" className="flex items-center gap-2.5">
               <span className="flex size-9 items-center justify-center rounded-xl bg-[#4b8b5f] text-white">
@@ -58,7 +57,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Link groups */}
           {footerLinkGroups.map((group) => (
             <nav key={group.heading} aria-label={group.heading}>
               <h3 className="text-[15px] font-semibold text-white">
@@ -79,7 +77,6 @@ const Footer = () => {
             </nav>
           ))}
 
-          {/* Contact */}
           <div>
             <h3 className="text-[15px] font-semibold text-white">
               Stay in touch
@@ -104,7 +101,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[13px] text-[#8fa397]">
             &copy; 2025 Kindora. Together we make a difference.

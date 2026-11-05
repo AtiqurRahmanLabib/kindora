@@ -12,7 +12,6 @@ export function HeroBanner() {
   return (
     <section className="relative overflow-hidden bg-[#f2f0e6]">
       <div className="mx-auto grid max-w-360 items-center gap-14 px-6 pt-16 pb-24 sm:px-10 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-16 xl:pt-20">
-        {/* Left: copy */}
         <div>
           <p className="flex items-center gap-2 text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
             <Sparkles className="size-4" />
@@ -71,9 +70,7 @@ export function HeroBanner() {
           </div>
         </div>
 
-        {/* Right: visual */}
         <div className="relative">
-          {/* Decorative outline circle */}
           <div className="pointer-events-none absolute -right-16 -bottom-24 size-105 rounded-full border-2 border-[#9dbfae]" />
           <div className="relative">
             <Image
@@ -85,7 +82,6 @@ export function HeroBanner() {
               className="h-120 w-full rounded-[64px] object-cover sm:h-140 lg:h-160"
             />
 
-            {/* Floating stat card: impact */}
             <div className="absolute top-10 -right-4 flex items-center gap-3 rounded-2xl bg-white py-4 pr-6 pl-4 shadow-[0_12px_32px_rgba(31,61,51,0.12)] sm:-right-10">
               <span className="flex size-10 items-center justify-center rounded-full bg-[#e4efe4] text-[#3e7c5b]">
                 <Heart className="size-5" />
@@ -100,7 +96,6 @@ export function HeroBanner() {
               </span>
             </div>
 
-            {/* Floating stat card: joined */}
             <div className="absolute -bottom-8 -left-4 flex items-center gap-3 rounded-2xl bg-white py-4 pr-6 pl-4 shadow-[0_12px_32px_rgba(31,61,51,0.12)] sm:-left-10">
               <span className="flex">
                 <span className="size-7 rounded-full bg-[#e4efe4]" />

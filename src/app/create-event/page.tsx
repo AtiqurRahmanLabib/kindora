@@ -1,9 +1,10 @@
-
 "use client";
 
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { GetTokenFromClient } from "@/lib/GetTokenFormClinet";
 
 const categoryOptions = [
   "Community support",
@@ -22,46 +23,41 @@ const CreateEventPage = () => {
     e.preventDefault();
 
     if (!session?.user?.email) {
-      alert("Please login first");
+      toast.error("Please login first");
       return;
     }
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-
-    const eventData = {
-      ...data,
-      email: session.user.email,
-    };
-
-    console.log("Form submitted:", eventData);
-
     try {
-      const res = await fetch("http://localhost:5000/opportunities", {
+      const token = await GetTokenFromClient();
+
+      const formData = new FormData(e.currentTarget);
+      const eventData = Object.fromEntries(formData.entries());
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/opportunities`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(eventData),
       });
 
+      const result = await res.json();
+
       if (res.ok) {
-        console.log("Event created successfully");
-        alert("Event created successfully!");
+        toast.success("Event created successfully!");
         router.push("/manage-events");
       } else {
-        console.error("Failed to create event");
-        alert("Failed to create event");
+        toast.error(result.message || "Failed to create event");
       }
     } catch (error) {
       console.error("Error creating event:", error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
   return (
     <div className="font-family-name:var(--font-geist-sans)">
-      {/* Page hero */}
       <section className="border-b border-[#e3e1d4] bg-[#edefe8]">
         <div className="mx-auto max-w-360 px-6 py-20 text-center sm:px-10">
           <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase">
@@ -79,11 +75,8 @@ const CreateEventPage = () => {
         </div>
       </section>
 
-      {/* Form */}
       <main className="bg-[#f2f0e6]">
         <div className="mx-auto max-w-300 px-6 py-16 sm:px-10 lg:grid lg:grid-cols-[300px_1fr] lg:gap-14">
-
-          {/* Sidebar */}
           <aside className="max-lg:mb-10">
             <span className="inline-flex rounded-full bg-[#dfe8d8] px-3 py-1 text-xs font-semibold text-[#2e5b43]">
               Step 1 of 1
@@ -100,8 +93,7 @@ const CreateEventPage = () => {
 
             <div className="mt-7 border-t border-[#dcdacd] pt-7">
               <p className="flex items-center gap-2 text-[15px] font-semibold text-[#2e7d6f]">
-                <Sparkles className="size-4" />
-                A tip for great events
+                <Sparkles className="size-4" />A tip for great events
               </p>
 
               <p className="mt-2 pl-6 text-[13px] leading-relaxed text-[#707c73]">
@@ -111,12 +103,10 @@ const CreateEventPage = () => {
             </div>
           </aside>
 
-          {/* Form card */}
           <form
             className="rounded-2xl border border-[#e3e1d4] bg-white p-8 shadow-[0_2px_16px_rgba(31,61,51,0.05)] sm:p-10"
             onSubmit={handleSubmit}
           >
-            {/* Section 01 — Event basics */}
             <div className="flex items-start gap-4">
               <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dfe8d8] text-sm font-semibold text-[#2e5b43]">
                 01
@@ -186,7 +176,6 @@ const CreateEventPage = () => {
               </label>
             </div>
 
-            {/* Section 02 — Place & time */}
             <div className="mt-10 flex items-start gap-4">
               <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dfe8d8] text-sm font-semibold text-[#2e5b43]">
                 02
@@ -249,7 +238,6 @@ const CreateEventPage = () => {
               />
             </div>
 
-            {/* Actions */}
             <div className="mt-10 flex items-center justify-end gap-3 border-t border-[#e3e1d4] pt-7">
               <button
                 type="button"

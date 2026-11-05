@@ -25,10 +25,8 @@ const CommunityAction = () => {
     <section className="overflow-hidden bg-[#f2f0e6]">
       <div className="mx-auto max-w-360 px-5 py-14 sm:px-8 sm:py-16 md:px-10 lg:px-16 lg:py-24">
 
-        {/* Community Content */}
         <div className="grid items-center gap-10 md:gap-12 lg:grid-cols-[1fr_1.45fr] lg:gap-16 xl:gap-20">
 
-          {/* Text Content */}
           <div className="max-w-xl">
             <p className="text-xs font-bold tracking-[0.22em] text-[#2e7d6f] uppercase sm:text-sm">
               Community in action
@@ -52,10 +50,8 @@ const CommunityAction = () => {
             </a>
           </div>
 
-          {/* Image Collage */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1.45fr_1fr] sm:gap-3 sm:h-100 md:h-115 lg:h-110 xl:h-130">
 
-            {/* Large Image */}
             <div className="relative h-75 overflow-hidden rounded-2xl sm:h-full">
               <Image
                 src={largeImage.src}
@@ -67,7 +63,6 @@ const CommunityAction = () => {
               />
             </div>
 
-            {/* Small Images */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:grid-rows-2">
               {smallImages.map((image) => (
                 <div
@@ -88,15 +83,12 @@ const CommunityAction = () => {
           </div>
         </div>
 
-        {/* Newsletter Card */}
         <div className="relative mt-16 overflow-hidden rounded-2xl bg-[#1f3d33] px-5 py-10 sm:mt-20 sm:rounded-3xl sm:px-8 sm:py-12 md:px-12 lg:mt-24 lg:px-14 lg:py-16">
 
-          {/* Decorative Circle */}
           <div className="pointer-events-none absolute -top-40 -right-20 size-72 rounded-full border border-white/15 sm:right-10 sm:size-96" />
 
           <div className="relative grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
 
-            {/* Newsletter Text */}
             <div>
               <p className="text-xs font-bold tracking-[0.22em] text-[#a9bdb2] uppercase">
                 A little good news
@@ -112,7 +104,6 @@ const CommunityAction = () => {
               </p>
             </div>
 
-            {/* Newsletter Form */}
             <form
               className="flex w-full flex-col gap-3 rounded-2xl bg-white p-3 sm:flex-row sm:items-center sm:rounded-full sm:p-2 lg:justify-self-end lg:max-w-xl"
               action="#"

@@ -20,3 +20,16 @@ export type Opportunity = {
     whatToBring: string[];
   };
 };
+export type JoinedEvent = {
+  _id: string;
+  eventId: string;
+  title: string;
+  category: string;
+  location: string;
+  date: string;
+  image: string;
+  email: string;
+  name: string;
+  joinedAt: string;
+  status: string;
+};

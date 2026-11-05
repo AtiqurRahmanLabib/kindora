@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { CalendarDays, Pencil, Trash2, MapPin } from "lucide-react";
 import type { Opportunity } from "../../../type";
+import { toast } from "sonner";
 
 type EventCardProps = {
   event: Opportunity;
@@ -46,21 +47,19 @@ export default function EventCard({ event }: EventCardProps) {
       }
 
       setIsDeleted(true);
-      alert("Event deleted successfully!");
+      toast.success("Event deleted successfully!");
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete event. Please try again.");
+      toast.error("Failed to delete event. Please try again.");
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Hide deleted event from UI
   if (isDeleted) return null;
 
   return (
     <article className="grid grid-cols-1 gap-4 border-b border-[#e0e4dc] px-4 py-5 transition-colors hover:bg-[#fafbf9] sm:px-6 md:grid-cols-2 md:items-center lg:grid-cols-[2fr_0.8fr_1fr_0.6fr_auto]">
-      {/* Event Information */}
       <div className="flex min-w-0 items-center gap-3">
         <div className="relative h-14 w-16 shrink-0 overflow-hidden rounded-lg bg-[#e8eee6] sm:h-16 sm:w-20">
           {event.image ? (
@@ -90,7 +89,6 @@ export default function EventCard({ event }: EventCardProps) {
         </div>
       </div>
 
-      {/* Category */}
       <div className="flex items-center justify-between md:justify-start lg:block">
         <span className="text-xs text-[#758078] lg:hidden">Category</span>
 
@@ -99,7 +97,6 @@ export default function EventCard({ event }: EventCardProps) {
         </span>
       </div>
 
-      {/* Date */}
       <div className="flex items-center justify-between text-sm text-[#69756e] md:justify-start">
         <span className="text-xs text-[#758078] md:hidden">Date</span>
 
@@ -109,7 +106,6 @@ export default function EventCard({ event }: EventCardProps) {
         </div>
       </div>
 
-      {/* Status */}
       <div className="flex items-center justify-between md:justify-start lg:block">
         <span className="text-xs text-[#758078] lg:hidden">Status</span>
 
@@ -118,11 +114,9 @@ export default function EventCard({ event }: EventCardProps) {
         </span>
       </div>
 
-      {/* Actions */}
       <div className="flex items-center justify-end gap-2 border-t border-[#e0e4dc] pt-3 md:col-span-2 lg:col-span-1 lg:border-0 lg:pt-0">
         <button
           type="button"
-          onClick={() => console.log("Edit event:", event._id)}
           aria-label={`Edit ${event.title}`}
           className="rounded-lg border border-[#dce2da] p-2.5 text-[#263d33] transition hover:bg-[#edf2eb]"
         >
