@@ -4,7 +4,6 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { GetTokenFromClient } from "@/lib/GetTokenFormClinet";
 
 const categoryOptions = [
   "Community support",
@@ -28,28 +27,33 @@ const CreateEventPage = () => {
     }
 
     try {
-      const token = await GetTokenFromClient();
-
       const formData = new FormData(e.currentTarget);
-      const eventData = Object.fromEntries(formData.entries());
+
+      // Add logged-in user's email to event data
+      const eventData = {
+        ...Object.fromEntries(formData.entries()),
+        email: session.user.email,
+      };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API}/opportunities`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(eventData),
       });
 
       const result = await res.json();
 
-      if (res.ok) {
-        toast.success("Event created successfully!");
-        router.push("/manage-events");
-      } else {
+      if (!res.ok) {
         toast.error(result.message || "Failed to create event");
+        return;
       }
+
+      toast.success("Event created successfully!");
+
+      router.push("/manage-events");
+      router.refresh();
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error("Something went wrong");

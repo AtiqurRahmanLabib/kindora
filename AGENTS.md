@@ -32,9 +32,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Auth & route protection (better-auth)
 
-- Auth is `better-auth` with the MongoDB adapter (database `volunteer_hub`, `src/lib/auth.ts`): email/password plus Google and GitHub OAuth, and the JWT plugin. Server side uses the `auth` object; client side uses `authClient` and the `signIn`/`signUp`/`useSession` exports from `src/lib/auth-client.ts`. Local route handler: `src/app/api/auth/[...all]/route.ts`.
+- Auth is `better-auth` with the MongoDB adapter (database `volunteer_hub`, `src/lib/auth.ts`): email/password plus Google and GitHub OAuth. Server side uses the `auth` object; client side uses `authClient` and the `signIn`/`signUp`/`useSession` exports from `src/lib/auth-client.ts`. Local route handler: `src/app/api/auth/[...all]/route.ts`.
 - Route protection is `src/proxy.ts` — in Next 16 the file convention is `proxy.ts`, not `middleware.ts` (export a function named `proxy`). It redirects unauthenticated users of its matcher routes to `/login`.
-- JWT helpers: `getTokenFromServer()` in `src/lib/GetTokenFromServer.tsx`; client version is the async function `GetTokenFromClient` in `src/lib/GetTokenFormClinet.tsx` (filename misspelling is intentional-looking — match it rather than "fixing" imports elsewhere).
 
 ## Data source
 

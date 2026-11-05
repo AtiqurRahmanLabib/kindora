@@ -5,7 +5,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Opportunity } from "../../../type";
 import EventCard from "../../components/EventsCard/ManageEventCard";
+
 export const instant = false;
+
 export default async function ManageEventsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
